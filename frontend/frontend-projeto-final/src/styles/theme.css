@@ -1,0 +1,20 @@
+/* src/styles/theme.css */
+:root {
+  --background: #ffffff;
+  --text-color: #000000;
+  --border-color: #dddddd;
+  --search-background: #f0f0f0;
+  --button-background: #007bff;
+  --button-text-color: #ffffff;
+  --button-hover-background: #0056b3;
+}
+
+[data-theme="dark"] {
+  --background: #121212;
+  --text-color: #ffffff;
+  --border-color: #333333;
+  --search-background: #333333;
+  --button-background: #444444;
+  --button-text-color: #ffffff;
+  --button-hover-background: #555555;
+}
