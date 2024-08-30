@@ -1,0 +1,80 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo img {
+  height: 80px;
+  margin-right: 10px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: var(--search-background);
+  border-radius: 10px;
+  padding: 5px 10px;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 5px;
+  color: var(--text-color);
+}
+
+.search-icon {
+  background: transparent;
+  border: none;
+  border-left: 1px solid #3333;
+}
+
+.search-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--text-color);
+}
+
+.theme-switcher {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  margin-right: 10px;
+  color: var(--text-color);
+}
+
+.login-button {
+  background-color: var(--button-background);
+  border: none;
+  color: var(--button-text-color);
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.login-button:hover {
+  background-color: var(--button-hover-background);
+}
+
+.theme-login-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
