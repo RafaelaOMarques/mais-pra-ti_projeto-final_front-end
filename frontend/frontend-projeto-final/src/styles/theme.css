@@ -2,19 +2,19 @@
 :root {
   --background: #ffffff;
   --text-color: #000000;
-  --border-color: #dddddd;
-  --search-background: #f0f0f0;
+  --border-color: #e0e0e0;
+  --search-background: #f5f5f5;
   --button-background: #007bff;
   --button-text-color: #ffffff;
   --button-hover-background: #0056b3;
 }
 
 [data-theme="dark"] {
-  --background: #121212;
+  --background: #333333;
   --text-color: #ffffff;
-  --border-color: #333333;
-  --search-background: #333333;
+  --border-color: #444444;
+  --search-background: #555555;
   --button-background: #444444;
   --button-text-color: #ffffff;
-  --button-hover-background: #555555;
+  --button-hover-background: #666666;
 }
