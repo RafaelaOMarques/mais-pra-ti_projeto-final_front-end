@@ -26,9 +26,8 @@ justify-content: center;
 
 .usuario_div_principal{
 width: 100%;
-min-height: 100vh;
-border: solid;
 display: flex;
+min-height: 100vh;
 user-select: none;
 align-self: center !important;
 align-items: center;
