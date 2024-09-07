@@ -11,13 +11,15 @@ const Header = () => {
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
   return (
-    <header className="header-container">
-      <div className="logo">
+    <nav className="navbar navbar-expand-lg header-container">
+      <div className="navbar-brand">
+      <a class="navbar-brand logo" href="#">
         <img
           src={Logo}
           alt="Logo"
         />
         <span>API HUB BRASIL</span>
+      </a>
       </div>
       <div className="theme-login-container">
         <div className="search-container">
@@ -34,8 +36,7 @@ const Header = () => {
           {isDarkMode ? <FaSun /> : <FaMoon />}
         </button>
       </div>
-
-    </header>
+    </nav>
   );
 };
 

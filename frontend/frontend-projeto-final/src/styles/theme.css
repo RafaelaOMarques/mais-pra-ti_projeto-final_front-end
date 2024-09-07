@@ -9,6 +9,7 @@
   --button-background: #007bff;
   --button-text-color: #ffffff;
   --button-hover-background: #663422ac;
+  --icon-logo-color: transparent;
 }
 
 [data-theme="dark"] {
@@ -21,4 +22,5 @@
   --button-background: #444444;
   --button-text-color: #ffffff;
   --button-hover-background: #666666;
+  --icon-logo-color: #ffff;
 }
