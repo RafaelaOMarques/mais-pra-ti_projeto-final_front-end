@@ -24,6 +24,10 @@
   border-radius: 25px 18px 25px 25px;
 }
 
+.dark-mode .logo img {
+  background-color: var(--logo-bg-color-dark); /* Cor de fundo no modo escuro */
+}
+
 .logo span {
   font-size: 16px;
   font-weight: 800;
@@ -39,7 +43,7 @@
   padding: 0px 8px 0px 8px;
 }
 
-.search-container input{
+.search-container input {
   background: transparent;
   border: 1px solid #000;
   border-radius: 8px;
@@ -49,7 +53,7 @@
   outline: none;
 }
 
-.search-container input:focus{
+.search-container input:focus {
   border: 1px solid #ffffff;
 }
 .search-container img {
@@ -80,17 +84,17 @@
   width: 120px;
 }
 
-.theme-login-container .login-button:hover{
+.theme-login-container .login-button:hover {
   background-color: var(--button-hover-background);
 }
 
-.theme-login-container .login-button img{
+.theme-login-container .login-button img {
   width: 23px;
   height: 23px;
   padding: 6px;
 }
 
-.theme-login-container .login-button span{
+.theme-login-container .login-button span {
   font-size: 16px;
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
