@@ -21,14 +21,16 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const rotas = createBrowserRouter([
-  {path:"/", element:<App/>, children:[
-    {path:'/Acesso', element:localStorage.getItem('autentico')=="true"?<Index/>:<Acesso/>},
-    {path:'/Cadastro', element:<Cadastro/>},
-    {path:'/Recuperacao', element:<Recuperacao/>}
-  ]}
+  {
+    path: "/", element: <App />, children: [
+      { path: '/Acesso', element: localStorage.getItem('autentico') == "true" ? <Index /> : <Acesso /> },
+      { path: '/Cadastro', element: <Cadastro /> },
+      { path: '/Recuperacao', element: <Recuperacao /> }
+    ]
+  }
 ])
 root.render(
   <React.StrictMode>
-    <RouterProvider router={rotas}/>
+    <RouterProvider router={rotas} />
   </React.StrictMode>
 );
