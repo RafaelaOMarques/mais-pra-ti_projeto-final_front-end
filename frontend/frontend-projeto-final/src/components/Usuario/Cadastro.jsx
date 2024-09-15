@@ -11,23 +11,45 @@ export default function Cadastro() {
   const [emailValido, defEmailValido] = useState(false);
   const [senhaValida, defSenhaValida] = useState(false);
 
+  const [nomeAvisoErro, defNomeAvisoErro] = useState(false);
+  const [emailAvisoErro, defEmailAvisoErro] = useState(false);
+  const [senhaAvisoErro, defSenhaAvisoErro] = useState(false);
+
   const Checagem = () => {
     if (nome.length > 0) {
-      defNomeValido(/\S+/.test(nome) && nome.length > 4);
+      if (/\S+/.test(nome) && nome.length > 4) {
+        defNomeValido(true);
+        defNomeAvisoErro(false);
+      } else {
+        defNomeAvisoErro(true);
+      }
     } else {
       defNomeValido(false);
+      defNomeAvisoErro(false);
     }
 
     if (email.length > 0) {
-      defEmailValido(/\S+@\S+\.\S+/.test(email));
+      if (/\S+@\S+\.\S+/.test(email)) {
+        defEmailValido(true);
+        defEmailAvisoErro(false);
+      } else {
+        defEmailAvisoErro(true);
+      }
     } else {
       defEmailValido(false);
+      defEmailAvisoErro(false);
     }
 
     if (senha.length > 0) {
-      defSenhaValida(senha.length > 7 && senha.length < 15);
+      if (senha.length > 7 && senha.length < 15) {
+        defSenhaValida(true);
+        defSenhaAvisoErro(false);
+      } else {
+        defSenhaAvisoErro(true);
+      }
     } else {
       defSenhaValida(false);
+      defSenhaAvisoErro(false);
     }
   };
 
@@ -61,7 +83,7 @@ export default function Cadastro() {
           <label className="dados_usuario">
             Nome de usuário
             <input
-              className={nomeValido ? "" : "input_error"}
+              className={nomeAvisoErro ? "input_error" : ""}
               onKeyUp={Checagem}
               value={nome}
               onChange={(e) => {
@@ -78,7 +100,7 @@ export default function Cadastro() {
           <label className="dados_usuario">
             Email
             <input
-              className={emailValido ? "" : "input_error"}
+              className={emailAvisoErro ? "input_error" : ""}
               onKeyUp={Checagem}
               value={email}
               onChange={(e) => {
@@ -95,7 +117,7 @@ export default function Cadastro() {
           <label className="dados_usuario">
             Senha
             <input
-              className={senhaValida ? "" : "input_error"}
+              className={senhaAvisoErro ? "input_error" : ""}
               onKeyUp={Checagem}
               value={senha}
               onChange={(e) => {
@@ -127,6 +149,15 @@ export default function Cadastro() {
               type="submit"
             >
               Criar conta
+            </button>
+            <button
+              className="botoes_usuario botoes-full"
+              type="button"
+              onClick={() => {
+                window.location.href = "/Acesso";
+              }}
+            >
+              Voltar
             </button>
           </div>
         </div>

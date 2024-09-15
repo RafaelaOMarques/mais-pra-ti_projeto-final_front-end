@@ -3,15 +3,20 @@ import { useState } from "react";
 export default function Recuperacao() {
   const [email, defEmail] = useState("");
   const [emailValido, defEmailValido] = useState(false);
+  const [emailAvisoErro, defEmailAvisoErro] = useState(false);
 
   const Checagem = () => {
     if (email.length > 0) {
       defEmailValido(false);
       if (/\S+@\S+\.\S+/.test(email)) {
         defEmailValido(true);
+        defEmailAvisoErro(false);
+      } else {
+        defEmailAvisoErro(true);
       }
     } else {
       defEmailValido(false);
+      defEmailAvisoErro(false);
     }
   };
 
@@ -30,7 +35,7 @@ export default function Recuperacao() {
           <label className="dados_usuario">
             Email
             <input
-              style={{ borderColor: emailValido ? "#DDD" : "#A00" }}
+              className={emailAvisoErro ? "input_error" : ""}
               onKeyUp={Checagem}
               value={email}
               onChange={(e) => {
@@ -54,7 +59,7 @@ export default function Recuperacao() {
               className="botoes_usuario botoes-full"
               type="button"
               onClick={() => {
-                window.location.href = "/";
+                window.location.href = "/Acesso";
               }}
             >
               Voltar

@@ -11,14 +11,22 @@ import LoginIcon from "../../assets/login_icon.svg";
 const Header = () => {
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
+  const Acessar = () => {
+    if (localStorage.getItem('autentico') == "false") {
+      window.location.href = "/Acesso";
+    } else {
+      localStorage.removeItem('autentico');
+      window.location.href = "/";
+    }
+  }
+
   return (
     <nav
-      className={`navbar navbar-expand-lg header-container ${
-        isDarkMode ? "dark-mode" : ""
-      }`}
+      className={`navbar navbar-expand-lg header-container ${isDarkMode ? "dark-mode" : ""
+        }`}
     >
       <div className="navbar-brand">
-        <a class="navbar-brand logo" href="#">
+        <a className="navbar-brand logo" href="#">
           <img src={isDarkMode ? Logo2 : Logo} alt="Logo" />
           <span>API HUB BRASIL</span>
         </a>
@@ -28,9 +36,9 @@ const Header = () => {
           <input type="text" />
           <img src={SearchIcon} alt="search-icon" />
         </div>
-        <button className="login-button">
+        <button onClick={Acessar} className="login-button">
           <img src={LoginIcon} alt="login icon" />
-          <span>Entrar</span>
+          <span>{localStorage.getItem('autentico') == "true" ? "Sair" : "Entrar"}</span>
         </button>
         <button className="theme-switcher" onClick={toggleDarkMode}>
           {isDarkMode ? <FaSun /> : <FaMoon />}
