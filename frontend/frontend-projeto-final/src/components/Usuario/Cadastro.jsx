@@ -55,9 +55,9 @@ export default function Cadastro() {
 
   const Enviar = (e) => {
     e.preventDefault();
-    localStorage.setItem("autentico", false);
+    localStorage.setItem("autenticado", false);
     if (nomeValido && emailValido && senhaValida) {
-      localStorage.setItem("autentico", true);
+      localStorage.setItem("autenticado", true);
       localStorage.setItem("nome", nome);
       localStorage.setItem("email", email);
       localStorage.setItem("senha", senha);

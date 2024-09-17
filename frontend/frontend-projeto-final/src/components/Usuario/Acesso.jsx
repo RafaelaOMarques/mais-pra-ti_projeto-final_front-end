@@ -28,10 +28,10 @@ export default function Acesso() {
       senha === localStorage.getItem("senha")
     ) {
       localStorage.setItem("lembrarSenha", lembrarSenha);
-      localStorage.setItem("autentico", true);
+      localStorage.setItem("autenticado", true);
       window.location.href = "/";
     } else {
-      localStorage.setItem("autentico", false);
+      localStorage.setItem("autenticado", false);
       defEmail("");
       defSenha("");
       alert("Email ou senha inválida!");

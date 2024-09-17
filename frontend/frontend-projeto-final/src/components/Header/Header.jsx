@@ -12,18 +12,19 @@ const Header = () => {
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
   const Acessar = () => {
-    if (localStorage.getItem('autentico') == "false") {
+    if (localStorage.getItem("autenticado") == "false") {
       window.location.href = "/Acesso";
     } else {
-      localStorage.removeItem('autentico');
-      window.location.href = "/";
+      localStorage.removeItem("autenticado");
+      window.location.href = "/rotaAutenticada";
     }
-  }
+  };
 
   return (
     <nav
-      className={`navbar navbar-expand-lg header-container ${isDarkMode ? "dark-mode" : ""
-        }`}
+      className={`navbar navbar-expand-lg header-container ${
+        isDarkMode ? "dark-mode" : ""
+      }`}
     >
       <div className="navbar-brand">
         <a className="navbar-brand logo" href="#">
@@ -38,7 +39,9 @@ const Header = () => {
         </div>
         <button onClick={Acessar} className="login-button">
           <img src={LoginIcon} alt="login icon" />
-          <span>{localStorage.getItem('autentico') == "true" ? "Sair" : "Entrar"}</span>
+          <span>
+            {localStorage.getItem("autenticado") == "true" ? "Sair" : "Entrar"}
+          </span>
         </button>
         <button className="theme-switcher" onClick={toggleDarkMode}>
           {isDarkMode ? <FaSun /> : <FaMoon />}

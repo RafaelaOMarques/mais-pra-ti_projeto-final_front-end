@@ -140,3 +140,7 @@ body {
 .botoes-full {
   width: 100%;
 }
+
+.link-recuperacao {
+  color: var(--primary-main);
+}
