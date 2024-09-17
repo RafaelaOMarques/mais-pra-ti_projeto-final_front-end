@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../../styles/usuario.css";
+import {useNavigate} from "react-router-dom"
 
 export default function Cadastro() {
   const [nome, defNome] = useState(""),
@@ -76,8 +77,11 @@ export default function Cadastro() {
     defSenhaValida(false);
   };
 
+  let navegar = useNavigate();
+
   return (
     <div className="usuario_div_principal">
+      <button id="btVoltar" onClick={()=>{navegar(-1);}}></button>
       <form onSubmit={Enviar}>
         <div>
           <label className="dados_usuario">
@@ -149,15 +153,6 @@ export default function Cadastro() {
               type="submit"
             >
               Criar conta
-            </button>
-            <button
-              className="botoes_usuario botoes-full"
-              type="button"
-              onClick={() => {
-                window.location.href = "/Acesso";
-              }}
-            >
-              Voltar
             </button>
           </div>
         </div>

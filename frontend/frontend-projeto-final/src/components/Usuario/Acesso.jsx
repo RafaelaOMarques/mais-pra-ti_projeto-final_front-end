@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import {useNavigate} from "react-router-dom"
 import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
 import "../../styles/usuario.css";
 
@@ -38,8 +39,10 @@ export default function Acesso() {
     }
   };
 
+  let navegar = useNavigate();
   return (
     <div className={`usuario_div_principal ${isDarkMode ? "dark-mode" : ""}`}>
+      <button id="btVoltar" onClick={()=>{navegar("/");}}></button>
       <form onSubmit={Enviar}>
         <div className="usuario_form_container">
           <label className="dados_usuario">

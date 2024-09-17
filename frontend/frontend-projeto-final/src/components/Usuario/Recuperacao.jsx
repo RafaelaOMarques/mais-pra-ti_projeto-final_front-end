@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {useNavigate} from "react-router-dom"
 
 export default function Recuperacao() {
   const [email, defEmail] = useState("");
@@ -28,8 +29,11 @@ export default function Recuperacao() {
     }
   };
 
+  let navegar = useNavigate();
+
   return (
     <div className="usuario_div_principal">
+      <button id="btVoltar" onClick={()=>{navegar(-1);}}></button>
       <form onSubmit={Enviar}>
         <div>
           <label className="dados_usuario">
@@ -54,15 +58,6 @@ export default function Recuperacao() {
               type="submit"
             >
               Recuperar senha
-            </button>
-            <button
-              className="botoes_usuario botoes-full"
-              type="button"
-              onClick={() => {
-                window.location.href = "/Acesso";
-              }}
-            >
-              Voltar
             </button>
           </div>
         </div>
