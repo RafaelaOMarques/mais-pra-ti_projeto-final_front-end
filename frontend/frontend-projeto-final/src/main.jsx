@@ -23,7 +23,6 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 const rotas = createBrowserRouter([
   {
     path: "/", element: <App />, children: [
-      { path: '/', element: localStorage.getItem('autentico') == "true" ? <Index /> : <Acesso /> },
       { path: '/Acesso', element: localStorage.getItem('autentico') == "true" ? <Index /> : <Acesso /> },
       { path: '/Cadastro', element: <Cadastro /> },
       { path: '/Recuperacao', element: <Recuperacao /> }
