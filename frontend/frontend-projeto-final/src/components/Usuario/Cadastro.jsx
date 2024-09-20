@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "../../styles/usuario.css";
-import {useNavigate} from "react-router-dom"
+import icoSenhaInvisivel from "../../assets/senhaInvisivel.png"
+import icoSenhaVisivel from "../../assets/senhaVisivel.png"
+import { useNavigate } from "react-router-dom"
 
 export default function Cadastro() {
   const [nome, defNome] = useState(""),
@@ -15,6 +17,7 @@ export default function Cadastro() {
   const [nomeAvisoErro, defNomeAvisoErro] = useState(false);
   const [emailAvisoErro, defEmailAvisoErro] = useState(false);
   const [senhaAvisoErro, defSenhaAvisoErro] = useState(false);
+  const [senhaVisivel, defSenhaVisivel] = useState(false);
 
   const Checagem = () => {
     if (nome.length > 0) {
@@ -63,6 +66,7 @@ export default function Cadastro() {
       localStorage.setItem("email", email);
       localStorage.setItem("senha", senha);
       localStorage.setItem("lembrarSenha", lembrarSenha);
+      
       window.location.href = "/";
     }
     redefinirCampos();
@@ -81,11 +85,11 @@ export default function Cadastro() {
 
   return (
     <div className="usuario_div_principal">
-      <button id="btVoltar" onClick={()=>{navegar(-1);}}></button>
-      <form onSubmit={Enviar}>
+      <button id="btVoltar" onClick={() => { navegar(-1); }}></button>
+      <form method="post" onSubmit={Enviar}>
         <div>
           <label className="dados_usuario">
-            Nome de usuário
+            Nome do usuário
             <input
               className={nomeAvisoErro ? "input_error" : ""}
               onKeyUp={Checagem}
@@ -100,6 +104,7 @@ export default function Cadastro() {
               placeholder="Nome"
               type="text"
             />
+            <span className="avisosCadastro">{nomeAvisoErro ? "Nome deve ter mais de 4 caracteres" : ""}</span>
           </label>
           <label className="dados_usuario">
             Email
@@ -117,6 +122,7 @@ export default function Cadastro() {
               placeholder="seu@email.com"
               type="email"
             />
+            <span className="avisosCadastro">{emailAvisoErro ? "Digite um email válido" : ""}</span>
           </label>
           <label className="dados_usuario">
             Senha
@@ -132,8 +138,10 @@ export default function Cadastro() {
               name="password"
               required
               placeholder="8 a 14 carácteres"
-              type="password"
+              type={senhaVisivel ? "text" : "password"}
             />
+            <i className="ver_senha" onClick={() => { defSenhaVisivel(!senhaVisivel); }} style={{ backgroundImage: `url("${senhaVisivel ? icoSenhaVisivel : icoSenhaInvisivel}")` }}></i>
+            <span className="avisosCadastro">{senhaAvisoErro ? "Senha deve ter 8 a 14 caracteres" : ""}</span>
           </label>
           <label className="label_lembrar_senha">
             <input
@@ -144,7 +152,7 @@ export default function Cadastro() {
               }}
               checked={lembrarSenha}
             />{" "}
-            <span className="span_lembrar_senha"></span>Lembrar meu login
+            <span className="span_lembrar_senha"></span>Lembrar-me
           </label>
           <div className="container-flex-column">
             <button

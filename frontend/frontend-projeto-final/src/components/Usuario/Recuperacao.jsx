@@ -51,6 +51,7 @@ export default function Recuperacao() {
               placeholder="seu@email.com"
               type="email"
             />
+            <span className="avisosCadastro">{emailAvisoErro ? "Digite um email válido" : ""}</span>
           </label>
           <div className="container-flex-column">
             <button
