@@ -41,21 +41,27 @@
   display: flex;
   align-items: center;
   padding: 0px 8px 0px 8px;
+  transition: flex 0.3s ease; /* Adiciona uma transição suave */
+}
+
+.search-container.expanded {
+  flex: 1; /* Ocupa mais espaço quando expandido */
 }
 
 .search-container input {
-  background: transparent;
+  background: var(--search-background); /* Usando a variável de cor do tema */
   border: 1px solid #000;
   border-radius: 8px;
   width: 100%;
   padding: 8px;
-  color: #ffffff;
+  color: var(--text-color); /* Adaptando a cor do texto de acordo com o tema */
   outline: none;
 }
 
 .search-container input:focus {
-  border: 1px solid #ffffff;
+  border: 1px solid var(--text-color); /* Usando a cor do texto para o foco */
 }
+
 .search-container img {
   width: 30px;
   height: 30px;
@@ -67,6 +73,7 @@
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
+  flex: 1;
 }
 
 .theme-login-container .login-button {
@@ -110,4 +117,12 @@
   padding: 6px;
   margin-top: -5px;
   color: var(--text-color);
+}
+
+.close-icon {
+  font-size: 25px; /* Tamanho do ícone, ajuste conforme necessário */
+}
+
+.close-icon .dark-mode {
+  color: white; /* Define a cor do ícone como branco */
 }

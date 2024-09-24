@@ -32,6 +32,7 @@ body {
 .dados_usuario {
   gap: 4px;
   display: flex;
+  position: relative;
   flex-direction: column;
 }
 
@@ -41,6 +42,19 @@ body {
   font-size: large;
   border-radius: 8px;
   border: 1px solid #ddd;
+}
+
+.ver_senha{
+  right: 2%;
+  bottom: 5%;
+  width: 25px;
+  height: 40px;
+  opacity: 0.5;
+  cursor: pointer;
+  position: absolute;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 #div_search {
@@ -139,4 +153,32 @@ body {
 
 .botoes-full {
   width: 100%;
+}
+
+.link-recuperacao {
+  color: var(--primary-main);
+}
+
+.avisosCadastro{
+  right: 5%;
+  color: #a00;
+  bottom: -20px;
+  font-size: small;
+  text-align: right;
+  position: absolute;
+}
+
+#btVoltar{
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  z-index: 10;
+  height: 40px;
+  border: none;
+  position: absolute;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-image: url("../assets/voltar.png");
 }
