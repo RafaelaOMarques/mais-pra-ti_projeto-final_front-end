@@ -44,18 +44,19 @@
 }
 
 .search-container input {
-  background: transparent;
+  background: var(--search-background); /* Usando a variável de cor do tema */
   border: 1px solid #000;
   border-radius: 8px;
   width: 100%;
   padding: 8px;
-  color: #ffffff;
+  color: var(--text-color); /* Adaptando a cor do texto de acordo com o tema */
   outline: none;
 }
 
 .search-container input:focus {
-  border: 1px solid #ffffff;
+  border: 1px solid var(--text-color); /* Usando a cor do texto para o foco */
 }
+
 .search-container img {
   width: 30px;
   height: 30px;
