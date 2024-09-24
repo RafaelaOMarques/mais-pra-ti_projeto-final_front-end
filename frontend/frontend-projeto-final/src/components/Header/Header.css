@@ -112,3 +112,11 @@
   margin-top: -5px;
   color: var(--text-color);
 }
+
+.close-icon {
+  font-size: 25px; /* Tamanho do ícone, ajuste conforme necessário */
+}
+
+.close-icon .dark-mode {
+  color: white; /* Define a cor do ícone como branco */
+}
