@@ -41,6 +41,11 @@
   display: flex;
   align-items: center;
   padding: 0px 8px 0px 8px;
+  transition: flex 0.3s ease; /* Adiciona uma transição suave */
+}
+
+.search-container.expanded {
+  flex: 1; /* Ocupa mais espaço quando expandido */
 }
 
 .search-container input {
@@ -68,6 +73,7 @@
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
+  flex: 1;
 }
 
 .theme-login-container .login-button {
