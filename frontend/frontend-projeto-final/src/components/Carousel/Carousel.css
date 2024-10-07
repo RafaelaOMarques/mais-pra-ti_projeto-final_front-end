@@ -1,18 +1,47 @@
+.carousel-container {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+.carousel-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center; /* Centraliza o título */
+}
+
 .carousel-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer; /* Indica que o item é clicável */
+  cursor: pointer;
+  padding: 10px;
 }
 
 .carousel-image {
-  width: 100%; /* Imagem ocupa toda a largura do item do carousel */
-  height: auto; /* Mantém a proporção da imagem */
+  width: 80%;
+  height: auto;
+  transition: transform 0.3s ease; /* Para o efeito de zoom */
 }
-.react-multi-carousel-list {
-  margin-top: 100px;
+
+.slick-center .carousel-image {
+  transform: scale(1.2); /* Zoom para o slide central */
 }
-.carousel-container{
-    margin-top: 100px;
+
+.slick-prev,
+.slick-next {
+  font-size: 2rem; /* Aumenta o tamanho das setas */
+  color: black; /* Define a cor das setas */
+  z-index: 2; /* Garante que as setas fiquem visíveis sobre o conteúdo */
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+  color: gray; /* Cor ao passar o mouse sobre as setas */
+}
+
+.slick-arrow {
+  z-index: 1; /* Assegura que as setas fiquem acima dos outros elementos */
 }

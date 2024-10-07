@@ -1,76 +1,65 @@
-import { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, EffectCoverflow } from "swiper/modules"; // Correta importação dos módulos
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/effect-coverflow";
-import "./Carousel.css"; // Importação do arquivo CSS
-import { useNavigate } from "react-router-dom";
-import Modal from "../Modal/Modal";
+import React, { useState } from "react";
+import Slider from "react-slick";
+import Modal from "../Modal/Modal"; // Certifique-se de que o Modal esteja implementado corretamente
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "./Carousel.css"; // Estilos para o Carousel
 
 const CarouselComponent = ({ apis = [] }) => {
   const [selectedApi, setSelectedApi] = useState(null);
-  const navigate = useNavigate();
 
   const handleApiClick = (api) => {
     setSelectedApi(api);
-    // Para redirecionar em vez de abrir modal:
-    // navigate(`/detalhes/${api.id}`);
+  };
+
+  const settings = {
+    infinite: true,
+    centerMode: true, // Permite o slide central estar no meio
+    slidesToShow: 3, // Número de slides completos visíveis
+    slidesToScroll: 1,
+    speed: 500,
+    arrows: true, // Ativa as setas laterais
+    dots: true, // Ativa as bolinhas de navegação
+    centerPadding: "40px", // Para mostrar metade dos slides laterais
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 5,
+          centerPadding: "30px",
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: "20px",
+        },
+      },
+    ],
+    nextArrow: <CustomNextArrow />, // Define as setas personalizadas
+    prevArrow: <CustomPrevArrow />,
   };
 
   return (
     <div className="carousel-container">
       {apis.length > 0 ? (
-        <Swiper
-          modules={[Navigation, Pagination, EffectCoverflow]}
-          spaceBetween={50}
-          slidesPerView={5} // Exibe 5 slides
-          centeredSlides={true}
-          loop={true}
-          navigation={true}
-          pagination={{ clickable: true }}
-          effect="coverflow"
-          coverflowEffect={{
-            rotate: 0,
-            stretch: 0,
-            depth: 100,
-            modifier: 1,
-            slideShadows: false,
-          }}
-          breakpoints={{
-            640: {
-              slidesPerView: 1, // Para telas menores
-            },
-            768: {
-              slidesPerView: 3, // Para telas médias
-            },
-            1024: {
-              slidesPerView: 5, // Para telas maiores
-            },
-          }}
-        >
+        <Slider {...settings}>
           {apis.map((api) => (
-            <SwiperSlide key={api.id} className="swiper-slide">
-              <div
-                onClick={() => handleApiClick(api)}
-                className="carousel-item"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <img
-                  src={api.imageUrl}
-                  alt={api.name}
-                  className="carousel-image"
-                />
-                <p>{api.name}</p>
-              </div>
-            </SwiperSlide>
+            <div
+              key={api.id}
+              onClick={() => handleApiClick(api)}
+              className="carousel-item"
+            >
+              <img
+                src={api.imageUrl}
+                alt={api.name}
+                className="carousel-image"
+              />
+              <p>{api.name}</p>
+            </div>
           ))}
-        </Swiper>
+        </Slider>
       ) : (
         <p>APIs ainda não disponíveis</p>
       )}
@@ -82,4 +71,27 @@ const CarouselComponent = ({ apis = [] }) => {
   );
 };
 
-export default CarouselComponent; // Exportação padrão
+// Componentes para customizar as setas
+const CustomNextArrow = (props) => {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, display: "block", right: 0, zIndex: 2 }}
+      onClick={onClick}
+    />
+  );
+};
+
+const CustomPrevArrow = (props) => {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, display: "block", left: 0, zIndex: 2 }}
+      onClick={onClick}
+    />
+  );
+};
+
+export default CarouselComponent;
