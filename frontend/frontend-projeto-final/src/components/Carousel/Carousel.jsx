@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Carousel.css"; // Estilos para o Carousel
 
-const CarouselComponent = ({ apis = [] }) => {
+const Carousel = ({ apis = [] }) => {
   const [selectedApi, setSelectedApi] = useState(null);
 
   const handleApiClick = (api) => {
@@ -43,6 +43,7 @@ const CarouselComponent = ({ apis = [] }) => {
 
   return (
     <div className="carousel-container">
+      <h2 className="carousel-title">Mais populares</h2>
       {apis.length > 0 ? (
         <Slider {...settings}>
           {apis.map((api) => (
@@ -94,4 +95,4 @@ const CustomPrevArrow = (props) => {
   );
 };
 
-export default CarouselComponent;
+export default Carousel;
