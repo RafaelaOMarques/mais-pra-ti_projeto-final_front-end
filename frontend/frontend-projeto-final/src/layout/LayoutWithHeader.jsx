@@ -3,6 +3,7 @@ import { DarkModeProvider } from "../context/DarkModeContext/DarkModeContext";
 import Header from "../components/Header/Header";
 import { Outlet } from "react-router-dom";
 import Carousel from "../components/Carousel/Carousel";
+import ListaApis from "../components/Listaapis/Listaapis";
 
 // Mock de dados para as APIs
 const mockApis = [
@@ -55,6 +56,7 @@ const LayoutWithHeader = () => {
     <DarkModeProvider>
       <Header />
       <Carousel apis={mockApis} />
+      <ListaApis/>
       <Outlet /> {/* Renderiza o conteúdo das rotas filhas */}
     </DarkModeProvider>
   );

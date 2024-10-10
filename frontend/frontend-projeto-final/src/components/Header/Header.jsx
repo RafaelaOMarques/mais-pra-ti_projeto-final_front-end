@@ -12,11 +12,11 @@ const Header = () => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   const Acessar = () => {
-    if (localStorage.getItem("autenticado") === "false") {
+    if (localStorage.getItem("autenticado") == null || localStorage.getItem("autenticado") === "false") {
       window.location.href = "/Acesso";
     } else {
       localStorage.removeItem("autenticado");
-      window.location.href = "/rotaAutenticada";
+      window.location.href = "/";
     }
   };
 
