@@ -14,14 +14,14 @@ const Carousel = ({ apis = [] }) => {
 
   const settings = {
     infinite: true,
-    centerMode: true, // Permite o slide central estar no meio
+    //centerMode: true, // Permite o slide central estar no meio
     slidesToShow: 4, // Número de slides completos visíveis
     slidesToScroll: 1,
     speed: 500,
     arrows: true, // Ativa as setas laterais
     dots: true, // Ativa as bolinhas de navegação
     centerPadding: "60px", // Para mostrar metade dos slides laterais
-    initialSlide: 0,
+    initialSlide: Math.floor(apis.length / 2),
     responsive: [
       {
         breakpoint: 1024,
@@ -45,7 +45,7 @@ const Carousel = ({ apis = [] }) => {
   return (
     <div className="carousel-container">
       <h2 className="carousel-title">Mais populares</h2>
-      {apis.length > 0 ? (
+      {apis.length >= 5 ? ( // Exibe o carousel se houver 5 ou mais APIs
         <Slider {...settings}>
           {apis.map((api) => (
             <div
@@ -62,7 +62,11 @@ const Carousel = ({ apis = [] }) => {
           ))}
         </Slider>
       ) : (
-        <p>APIs ainda não disponíveis</p>
+        <p>
+          {apis.length === 0
+            ? "APIs ainda não disponíveis"
+            : "APIs ainda insuficientes"}
+        </p>
       )}
 
       {selectedApi && (
