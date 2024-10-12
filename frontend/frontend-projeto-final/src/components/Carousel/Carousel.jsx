@@ -15,12 +15,13 @@ const Carousel = ({ apis = [] }) => {
   const settings = {
     infinite: true,
     centerMode: true, // Permite o slide central estar no meio
-    slidesToShow: 3, // Número de slides completos visíveis
+    slidesToShow: 4, // Número de slides completos visíveis
     slidesToScroll: 1,
     speed: 500,
     arrows: true, // Ativa as setas laterais
     dots: true, // Ativa as bolinhas de navegação
-    centerPadding: "40px", // Para mostrar metade dos slides laterais
+    centerPadding: "60px", // Para mostrar metade dos slides laterais
+    initialSlide: 0,
     responsive: [
       {
         breakpoint: 1024,
@@ -57,7 +58,6 @@ const Carousel = ({ apis = [] }) => {
                 alt={api.name}
                 className="carousel-image"
               />
-              <p>{api.name}</p>
             </div>
           ))}
         </Slider>
@@ -72,27 +72,16 @@ const Carousel = ({ apis = [] }) => {
   );
 };
 
-// Componentes para customizar as setas
+// Componente para a seta personalizada da direita
 const CustomNextArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "block", right: 0, zIndex: 2 }}
-      onClick={onClick}
-    />
-  );
+  const { className, onClick } = props;
+  return <div className={`${className} custom-next-arrow`} onClick={onClick} />;
 };
 
+// Componente para a seta personalizada da esquerda
 const CustomPrevArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "block", left: 0, zIndex: 2 }}
-      onClick={onClick}
-    />
-  );
+  const { className, onClick } = props;
+  return <div className={`${className} custom-prev-arrow`} onClick={onClick} />;
 };
 
 export default Carousel;

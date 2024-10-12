@@ -31,12 +31,12 @@ const mockApis = [
     imageUrl: "https://picsum.photos/500/300", // URL de exemplo
     description: "API que fornece dados sobre músicas e artistas.",
   },
-  {
-    id: 5,
-    name: "API de Livros",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "Uma API para buscar informações sobre livros e autores.",
-  },
+  // {
+  //   id: 5,
+  //   name: "API de Livros",
+  //   imageUrl: "https://picsum.photos/500/300", // URL de exemplo
+  //   description: "Uma API para buscar informações sobre livros e autores.",
+  // },
   // {
   //   id: 6,
   //   name: "API de Livros",
@@ -56,7 +56,7 @@ const LayoutWithHeader = () => {
     <DarkModeProvider>
       <Header />
       <Carousel apis={mockApis} />
-      <ListaApis/>
+      <ListaApis />
       <Outlet /> {/* Renderiza o conteúdo das rotas filhas */}
     </DarkModeProvider>
   );
