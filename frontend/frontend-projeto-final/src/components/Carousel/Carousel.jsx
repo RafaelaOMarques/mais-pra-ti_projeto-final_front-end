@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
-import Modal from "../Modal/Modal"; // Certifique-se de que o Modal esteja implementado corretamente
+import Modal from "../Listaapis/ModalApis";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./Carousel.css"; // Estilos para o Carousel
+import "./Carousel.css";
 
 const Carousel = ({ apis = [] }) => {
   const [selectedApi, setSelectedApi] = useState(null);
@@ -14,27 +14,28 @@ const Carousel = ({ apis = [] }) => {
 
   const settings = {
     infinite: true,
-    //centerMode: true, // Permite o slide central estar no meio
+    //centerMode: true,
     slidesToShow: 4, // Número de slides completos visíveis
     slidesToScroll: 1,
     speed: 500,
     arrows: true, // Ativa as setas laterais
     dots: true, // Ativa as bolinhas de navegação
     centerPadding: "60px", // Para mostrar metade dos slides laterais
-    initialSlide: Math.floor(apis.length / 2),
+    initialSlide: Math.floor(apis.length / 2), // Define o slide do meio como inicial
+
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 5,
-          centerPadding: "30px",
+          slidesToShow: 2,
+          //centerPadding: "30px",
         },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 1,
-          centerPadding: "20px",
+          //centerPadding: "20px",
         },
       },
     ],
@@ -55,9 +56,10 @@ const Carousel = ({ apis = [] }) => {
             >
               <img
                 src={api.imageUrl}
-                alt={api.name}
+                alt={api.nome}
                 className="carousel-image"
               />
+              <p>{api.nome}</p>
             </div>
           ))}
         </Slider>
@@ -70,7 +72,7 @@ const Carousel = ({ apis = [] }) => {
       )}
 
       {selectedApi && (
-        <Modal api={selectedApi} onClose={() => setSelectedApi(null)} />
+        <Modal api={selectedApi} Fechar={() => setSelectedApi(null)} />
       )}
     </div>
   );

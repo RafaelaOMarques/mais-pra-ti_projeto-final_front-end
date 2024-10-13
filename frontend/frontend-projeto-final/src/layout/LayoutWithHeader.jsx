@@ -9,45 +9,53 @@ import ListaApis from "../components/Listaapis/Listaapis";
 const mockApis = [
   {
     id: 1,
-    name: "API do Clima",
+    nome: "API do Clima",
     imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "Uma API para obter dados meteorológicos em tempo real.",
+    descricao: "Uma API para obter dados meteorológicos em tempo real.",
+    link: `https://www.api.com.br`,
   },
   {
     id: 2,
-    name: "API de Filmes",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "API que fornece informações sobre filmes e séries.",
+    nome: "API de Filmes",
+    imageUrl: "https://picsum.photos/400/300", // URL de exemplo
+    descricao: "API que fornece informações sobre filmes e séries.",
+    link: `https://www.api.com.br`,
   },
   {
     id: 3,
-    name: "API de Notícias",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "Uma API para acessar as últimas notícias do mundo.",
+    nome: "API de Notícias",
+    imageUrl: "https://picsum.photos/300/300", // URL de exemplo
+    descricao: "Uma API para acessar as últimas notícias do mundo.",
+    link: `https://www.api.com.br`,
   },
   {
     id: 4,
-    name: "API de Música",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "API que fornece dados sobre músicas e artistas.",
+    nome: "API de Música",
+    imageUrl: "https://picsum.photos/500/400", // URL de exemplo
+    descricao: "API que fornece dados sobre músicas e artistas.",
+    link: `https://www.api.com.br`,
   },
   {
     id: 5,
-    name: "API de Livros",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "Uma API para buscar informações sobre livros e autores.",
+    nome: "API de Livros",
+    imageUrl: "https://picsum.photos/300/400", // URL de exemplo
+    descricao: "Uma API para buscar informações sobre livros e autores.",
+    link: `https://www.api.com.br`,
   },
   // {
   //   id: 6,
-  //   name: "API de Livros",
+  //   nome: "API de Fotos",
   //   imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-  //   description: "Uma API para buscar informações sobre livros e autores.",
+  //   descricao: "Uma API para buscar informações sobre livros e autores.",
+  //   link: `https://www.api.com.br`,
+
   // },
   // {
   //   id: 7,
-  //   name: "API de Livros",
+  //   nome: "API de Animes",
   //   imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-  //   description: "Uma API para buscar informações sobre livros e autores.",
+  //   descricao: "Uma API para buscar informações sobre livros e autores.",
+  //   link: `https://www.api.com.br`,
   // },
 ];
 
