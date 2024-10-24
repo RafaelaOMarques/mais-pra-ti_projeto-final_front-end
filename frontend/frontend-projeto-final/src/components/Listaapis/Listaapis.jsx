@@ -1,32 +1,36 @@
 import React, { useState } from "react";
 import ModalApis from "./ModalApis";
-import imgTemporaria from "../../assets/viacep.png"
+import imgTemporaria from "../../assets/viacep.png";
 import "./ListaApis.css";
 
-export default function ListaApis() {
- const [apiSelec, defApiSelec] = useState(null);
+export default function ListaApis({ apis = [] }) {
+  const [apiSelec, defApiSelec] = useState(null);
 
- const produtos = Array.from({ length: 12 }, (_, i) => ({
-  id: i, nome: `Produto ${i}`,
-  descricao: `Descrição ${i}`,
-  metodos: i % 2 === 0 ? "GET" : "POST",
-  link: `https://www.api.com.br`,
-  imageUrl: imgTemporaria,
-  cor:'#0B3'
- }));
+  const exibirModal = (api) => {
+    defApiSelec(api);
+  };
+  const fecharModal = () => {
+    defApiSelec(null);
+  };
 
- const exibirModal = (api) => { defApiSelec(api); };
- const fecharModal = () => { defApiSelec(null); };
-
- return (
-  <div className="lista-apis">
-   <div className="colunas-apis">
-    {produtos.map((produto) => (
-     <div key={produto.id} className="apis" onClick={() => exibirModal(produto)} style={{background: `no-repeat url(${produto.imageUrl})`, backgroundColor:`${produto.cor}`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-     </div>
-    ))}
-   </div>
-   {apiSelec && <ModalApis api={apiSelec} Fechar={fecharModal} />}
-  </div>
- );
+  return (
+    <div className="lista-apis">
+      <div className="colunas-apis">
+        {apis.map((api) => (
+          <div
+            key={api.id}
+            className="apis"
+            onClick={() => exibirModal(api)}
+            style={{
+              background: `no-repeat url(${api.imageUrl})`,
+              backgroundColor: `${api.cor}`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          ></div>
+        ))}
+      </div>
+      {apiSelec && <ModalApis api={apiSelec} Fechar={fecharModal} />}
+    </div>
+  );
 }
