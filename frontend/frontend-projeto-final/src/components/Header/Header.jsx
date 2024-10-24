@@ -7,26 +7,37 @@ import Logo2 from "../../assets/globe_2.png";
 import SearchIcon from "../../assets/search_icon.svg";
 import LoginIcon from "../../assets/login_icon.svg";
 
-const Header = () => {
+const Header = ({ onSearchChange }) => {
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [searchValue, setSearchValue] = useState(""); // Estado para o valor da pesquisa
 
   const Acessar = () => {
-    if (localStorage.getItem("autenticado") === "false") {
+    if (
+      localStorage.getItem("autenticado") == null ||
+      localStorage.getItem("autenticado") === "false"
+    ) {
       window.location.href = "/Acesso";
     } else {
       localStorage.removeItem("autenticado");
-      window.location.href = "/rotaAutenticada";
+      window.location.href = "/";
     }
   };
 
   const closeSearch = () => {
     setIsSearchExpanded(false);
     setSearchValue("");
+    onSearchChange("");
   };
 
   const toggleSearch = () => {
     setIsSearchExpanded(true);
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    onSearchChange(value); // Atualiza o valor da pesquisa no Layout
   };
 
   return (
@@ -45,7 +56,12 @@ const Header = () => {
         <div
           className={`search-container ${isSearchExpanded ? "expanded" : ""}`}
         >
-          <input type="text" onFocus={toggleSearch} />
+          <input
+            type="text"
+            value={searchValue}
+            onChange={handleInputChange} // Lida com a alteração na barra de pesquisa
+            onFocus={toggleSearch}
+          />
           <img src={SearchIcon} alt="search-icon" />
           {isSearchExpanded && (
             <span className="clear-icon" onClick={closeSearch}>
