@@ -44,7 +44,43 @@ body {
   border: 1px solid #ddd;
 }
 
-.ver_senha{
+#tel_usuario {
+  gap: 10px;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  width: 100%;
+  flex-direction: row;
+  justify-content: start;
+}
+
+#tel_usuario input{
+  margin: 0;
+}
+
+#tel_usuario input:first-child {
+  width: 50px;
+  padding: 8px;
+  text-align: center;
+}
+
+#tel_usuario input:last-child {
+  width: 100%;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.ver_senha {
   right: 2%;
   bottom: 5%;
   width: 25px;
@@ -86,15 +122,15 @@ body {
   opacity: 0;
 }
 
-.label_lembrar_senha input:checked ~ .span_lembrar_senha {
+.label_lembrar_senha input:checked~.span_lembrar_senha {
   background-color: var(--primary-main);
 }
 
-.label_lembrar_senha input:checked ~ .span_lembrar_senha:after {
+.label_lembrar_senha input:checked~.span_lembrar_senha:after {
   display: block;
 }
 
-.label_lembrar_senha:hover input ~ .span_lembrar_senha {
+.label_lembrar_senha:hover input~.span_lembrar_senha {
   border: 1px solid #ddd;
 }
 
@@ -159,7 +195,7 @@ body {
   color: var(--primary-main);
 }
 
-.avisosCadastro{
+.avisosCadastro {
   right: 5%;
   color: #a00;
   bottom: -20px;
@@ -168,7 +204,7 @@ body {
   position: absolute;
 }
 
-#btVoltar{
+#btVoltar {
   top: 20px;
   left: 20px;
   width: 40px;

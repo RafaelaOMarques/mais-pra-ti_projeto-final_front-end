@@ -8,16 +8,59 @@ export default function Cadastro() {
   const [nome, defNome] = useState(""),
     [email, defEmail] = useState(""),
     [senha, defSenha] = useState(""),
-    [lembrarSenha, defLembrarSenha] = useState(false);
+    [lembrarSenha, defLembrarSenha] = useState(false),
+    [DDD, defDDD] = useState("");
+  let [cpf, defCPF] = useState(""), [telefone, defTel] = useState("");
 
   const [nomeValido, defNomeValido] = useState(false);
+  const [cpfValido, defCpfValido] = useState(false);
   const [emailValido, defEmailValido] = useState(false);
+  const [DDDValido, defDDDValido] = useState(false);
+  const [telValido, defTelValido] = useState(false);
   const [senhaValida, defSenhaValida] = useState(false);
 
   const [nomeAvisoErro, defNomeAvisoErro] = useState(false);
+  const [cpfAvisoErro, defCpfAvisoErro] = useState(false);
   const [emailAvisoErro, defEmailAvisoErro] = useState(false);
+  const [DDDAvisoErro, defDDDAvisoErro] = useState(false);
+  const [telAvisoErro, defTelAvisoErro] = useState(false);
   const [senhaAvisoErro, defSenhaAvisoErro] = useState(false);
   const [senhaVisivel, defSenhaVisivel] = useState(false);
+
+  const DDDValidos = [
+    '68',                    // Acre
+    '82',                    // Alagoas
+    '96',                    // Amapá
+    '97',                    // Amazonas
+    '71', '73', '74', '75', '77', // Bahia
+    '85', '88',              // Ceará
+    '61',                    // Distrito Federal
+    '27', '28',              // Espírito Santo
+    '62', '64',              // Goiás
+    '63',                    // Maranhão
+    '65',                    // Mato Grosso
+    '66',                    // Mato Grosso do Sul
+    '31', '32', '33', '34', '35', '37', '38', // Minas Gerais
+    '41', '42', '43', '44', '45', '46', // Paraná
+    '83',                    // Paraíba
+    '91', '93', '94',       // Pará
+    '81',                    // Pernambuco
+    '98', '99',              // Piauí
+    '21', '22', '24',       // Rio de Janeiro
+    '84',                    // Rio Grande do Norte
+    '51', '53', '54', '55', // Rio Grande do Sul
+    '69',                    // Rondônia
+    '96',                    // Roraima
+    '47', '48', '49',       // Santa Catarina
+    '11', '12', '13', '14', '15', '16', '17', '18', '19', // São Paulo
+    '79',                    // Sergipe
+    '63',                    // Tocantins
+  ];
+
+  // Para obter todos os DDDs em um array, se necessário
+  const allDDDs = DDDValidos.flat();
+
+
 
   const Checagem = () => {
     if (nome.length > 0) {
@@ -32,6 +75,21 @@ export default function Cadastro() {
       defNomeAvisoErro(false);
     }
 
+    if (cpf.length > 0) {
+      if (/^(?:\d{3}\.\d{3}\.\d{3}-\d{2}|\d{11})$/.test(cpf)) {
+        cpf = cpf.replace(/[.\-]/g, '');
+        if (cpf.length === 11) {
+          defCpfValido(true);
+          defCpfAvisoErro(false);
+          return;
+        }
+      }
+      defCpfAvisoErro(true);
+    } else {
+      defCpfValido(false);
+      defCpfAvisoErro(false);
+    }
+
     if (email.length > 0) {
       if (/\S+@\S+\.\S+/.test(email)) {
         defEmailValido(true);
@@ -42,6 +100,33 @@ export default function Cadastro() {
     } else {
       defEmailValido(false);
       defEmailAvisoErro(false);
+    }
+
+    if (DDD.length > 0) {
+      if (/^\d{2}$/.test(DDD) && DDDValidos.includes(DDD)) {
+        defDDDValido(true);
+        defDDDAvisoErro(false);
+      } else {
+        defDDDAvisoErro(true);
+      }
+    } else {
+      defDDDValido(false);
+      defDDDAvisoErro(false);
+    }
+
+    if (telefone.length > 0) {
+      if (/^(?:\d{8}|\d{9}|\d{5}-\d{4}|\d{4}-\d{4})$/.test(telefone)) {
+        telefone = telefone.replace(/\D/g, '');
+        if ((telefone.length === 8 || telefone.length === 9)) {
+          defTelValido(true);
+          defTelAvisoErro(false);
+          return;
+        }
+      }
+      defTelAvisoErro(true);
+    } else {
+      defTelValido(false);
+      defTelAvisoErro(false);
     }
 
     if (senha.length > 0) {
@@ -60,13 +145,17 @@ export default function Cadastro() {
   const Enviar = (e) => {
     e.preventDefault();
     localStorage.setItem("autenticado", false);
-    if (nomeValido && emailValido && senhaValida) {
+    if (nomeValido && cpfValido && emailValido && telValido && senhaValida) {
+      // enviar
+      // username, cpf, email, phone, password,  
+      /*
       localStorage.setItem("autenticado", true);
       localStorage.setItem("nome", nome);
       localStorage.setItem("email", email);
       localStorage.setItem("senha", senha);
       localStorage.setItem("lembrarSenha", lembrarSenha);
-      
+      */
+
       window.location.href = "/";
     }
     redefinirCampos();
@@ -74,10 +163,16 @@ export default function Cadastro() {
 
   const redefinirCampos = () => {
     defNome("");
+    defCPF("");
     defEmail("");
+    defTel("");
+    defDDD("");
     defSenha("");
     defNomeValido(false);
+    defCpfValido(false);
     defEmailValido(false);
+    defTelValido(false);
+    defDDDValido(false);
     defSenhaValida(false);
   };
 
@@ -106,6 +201,27 @@ export default function Cadastro() {
             />
             <span className="avisosCadastro">{nomeAvisoErro ? "Nome deve ter mais de 4 caracteres" : ""}</span>
           </label>
+
+          <label className="dados_usuario">
+            CPF
+            <input
+              className={cpfAvisoErro ? "input_error" : ""}
+              onKeyUp={Checagem}
+              value={cpf}
+              onChange={(e) => {
+                defCPF(e.target.value);
+                Checagem();
+              }}
+              autoComplete="cpf"
+              name="cpf"
+              required
+              placeholder="000.000.000-00"
+              type="text"
+            />
+            <span className="avisosCadastro">{cpfAvisoErro ? "Digite um CPF válido" : ""}</span>
+          </label>
+
+
           <label className="dados_usuario">
             Email
             <input
@@ -123,6 +239,40 @@ export default function Cadastro() {
               type="email"
             />
             <span className="avisosCadastro">{emailAvisoErro ? "Digite um email válido" : ""}</span>
+          </label>
+          <label className="dados_usuario">
+            Telefone
+            <div id="tel_usuario">
+              <input
+                className={DDDAvisoErro ? "input_error" : ""}
+                onKeyUp={Checagem}
+                value={DDD}
+                onChange={(e) => {
+                  defDDD(e.target.value);
+                  Checagem();
+                }}
+                autoComplete="DDD"
+                name="DDD"
+                required
+                placeholder="00"
+                type="number"
+              />
+              <input
+                className={telAvisoErro ? "input_error" : ""}
+                onKeyUp={Checagem}
+                value={telefone}
+                onChange={(e) => {
+                  defTel(e.target.value);
+                  Checagem();
+                }}
+                autoComplete="tel"
+                name="tel"
+                required
+                placeholder="00000-0000"
+                type="tel"
+              />
+            </div>
+            <span className="avisosCadastro">{telAvisoErro ? "Número de telefone invalido" : ""}</span>
           </label>
           <label className="dados_usuario">
             Senha
