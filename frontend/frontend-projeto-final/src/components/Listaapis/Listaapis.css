@@ -1,5 +1,5 @@
 .lista-apis {
- width: 90vw;
+ width: 100%;
  display: flex;
  padding: 40px;
  align-items: center;
@@ -29,5 +29,5 @@ justify-content: center;
 
 .apis:hover {
  scale: 1.1;
- box-shadow: 0 0 10px 4px #0003;
+ box-shadow: 0 0 10px 4px var(--lista-apis-box-shadow-color);
 }

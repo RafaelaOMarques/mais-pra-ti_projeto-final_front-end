@@ -3,6 +3,7 @@ import "../../styles/usuario.css";
 import icoSenhaInvisivel from "../../assets/senhaInvisivel.png"
 import icoSenhaVisivel from "../../assets/senhaVisivel.png"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
 
 export default function Cadastro() {
   const [nome, defNome] = useState(""),
@@ -10,20 +11,21 @@ export default function Cadastro() {
     [senha, defSenha] = useState(""),
     [lembrarSenha, defLembrarSenha] = useState(false),
     [DDD, defDDD] = useState("");
-  let [cpf, defCPF] = useState(""), [telefone, defTel] = useState("");
+
+    let [telefone, defTelefone] = useState(""), [cpf, defCPF] = useState("");
 
   const [nomeValido, defNomeValido] = useState(false);
   const [cpfValido, defCpfValido] = useState(false);
   const [emailValido, defEmailValido] = useState(false);
   const [DDDValido, defDDDValido] = useState(false);
-  const [telValido, defTelValido] = useState(false);
+  const [telefoneValido, defTelefoneValido] = useState(false);
   const [senhaValida, defSenhaValida] = useState(false);
 
   const [nomeAvisoErro, defNomeAvisoErro] = useState(false);
   const [cpfAvisoErro, defCpfAvisoErro] = useState(false);
   const [emailAvisoErro, defEmailAvisoErro] = useState(false);
   const [DDDAvisoErro, defDDDAvisoErro] = useState(false);
-  const [telAvisoErro, defTelAvisoErro] = useState(false);
+  const [telefoneAvisoErro, defTelefoneAvisoErro] = useState(false);
   const [senhaAvisoErro, defSenhaAvisoErro] = useState(false);
   const [senhaVisivel, defSenhaVisivel] = useState(false);
 
@@ -57,11 +59,6 @@ export default function Cadastro() {
     '63',                    // Tocantins
   ];
 
-  // Para obter todos os DDDs em um array, se necessário
-  const allDDDs = DDDValidos.flat();
-
-
-
   const Checagem = () => {
     if (nome.length > 0) {
       if (/\S+/.test(nome) && nome.length > 4) {
@@ -81,10 +78,12 @@ export default function Cadastro() {
         if (cpf.length === 11) {
           defCpfValido(true);
           defCpfAvisoErro(false);
-          return;
+        } else {
+          defCpfAvisoErro(true);
         }
+      } else {
+        defCpfAvisoErro(true);
       }
-      defCpfAvisoErro(true);
     } else {
       defCpfValido(false);
       defCpfAvisoErro(false);
@@ -118,15 +117,17 @@ export default function Cadastro() {
       if (/^(?:\d{8}|\d{9}|\d{5}-\d{4}|\d{4}-\d{4})$/.test(telefone)) {
         telefone = telefone.replace(/\D/g, '');
         if ((telefone.length === 8 || telefone.length === 9)) {
-          defTelValido(true);
-          defTelAvisoErro(false);
-          return;
+          defTelefoneValido(true);
+          defTelefoneAvisoErro(false);
+        } else {
+          defTelefoneAvisoErro(true);
         }
+      } else {
+        defTelefoneAvisoErro(true);
       }
-      defTelAvisoErro(true);
     } else {
-      defTelValido(false);
-      defTelAvisoErro(false);
+      defTelefoneValido(false);
+      defTelefoneAvisoErro(false);
     }
 
     if (senha.length > 0) {
@@ -145,16 +146,38 @@ export default function Cadastro() {
   const Enviar = (e) => {
     e.preventDefault();
     localStorage.setItem("autenticado", false);
-    if (nomeValido && cpfValido && emailValido && telValido && senhaValida) {
+    if (nomeValido && cpfValido && emailValido && DDDValido && telefoneValido && senhaValida) {
       // enviar
-      // username, cpf, email, phone, password,  
+      // username, cpf, email, phone (DDD+telefone), password,  
+
       /*
+      ANTIGO
       localStorage.setItem("autenticado", true);
       localStorage.setItem("nome", nome);
       localStorage.setItem("email", email);
       localStorage.setItem("senha", senha);
       localStorage.setItem("lembrarSenha", lembrarSenha);
       */
+
+
+
+      console.log("Axios");
+      const API_URL = import.meta.env.VITE_BACKEND_URL;
+      axios.post(`'${API_URL}/auth/signup'`,
+        {
+          "username": `"${nome}"`,
+          "cpf": `"${cpf}"`,
+          "password": `"${senha}"`,
+          "phone": `"${DDD}${telefone}"`,
+          "email": `"${email}"`
+        }
+      )
+      .then(r => console.log("Retorno: " + r))
+      .catch(e => console.log("Erro: " + e));
+      console.log("Fim");
+
+
+
 
       window.location.href = "/";
     }
@@ -165,13 +188,13 @@ export default function Cadastro() {
     defNome("");
     defCPF("");
     defEmail("");
-    defTel("");
     defDDD("");
+    defTelefone("");
     defSenha("");
     defNomeValido(false);
     defCpfValido(false);
     defEmailValido(false);
-    defTelValido(false);
+    defTelefoneValido(false);
     defDDDValido(false);
     defSenhaValida(false);
   };
@@ -258,11 +281,11 @@ export default function Cadastro() {
                 type="number"
               />
               <input
-                className={telAvisoErro ? "input_error" : ""}
+                className={telefoneAvisoErro ? "input_error" : ""}
                 onKeyUp={Checagem}
                 value={telefone}
                 onChange={(e) => {
-                  defTel(e.target.value);
+                  defTelefone(e.target.value);
                   Checagem();
                 }}
                 autoComplete="tel"
@@ -272,7 +295,7 @@ export default function Cadastro() {
                 type="tel"
               />
             </div>
-            <span className="avisosCadastro">{telAvisoErro ? "Número de telefone invalido" : ""}</span>
+            <span className="avisosCadastro">{telefoneAvisoErro ? "Número de telefone invalido" : ""}</span>
           </label>
           <label className="dados_usuario">
             Senha

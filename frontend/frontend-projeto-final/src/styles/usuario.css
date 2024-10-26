@@ -197,7 +197,7 @@ input[type=number] {
 
 .avisosCadastro {
   right: 5%;
-  color: #a00;
+  color: var(--erro-validar-dados-usuario);
   bottom: -20px;
   font-size: small;
   text-align: right;

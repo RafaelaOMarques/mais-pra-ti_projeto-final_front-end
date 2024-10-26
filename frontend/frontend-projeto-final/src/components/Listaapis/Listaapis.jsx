@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ModalApis from "./ModalApis";
+import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
 import imgTemporaria from "../../assets/viacep.png";
 import "./ListaApis.css";
 
 export default function ListaApis({ apis = [] }) {
+  const { isDarkMode } = useContext(DarkModeContext);
   const [apiSelec, defApiSelec] = useState(null);
 
   const exibirModal = (api) => {
@@ -14,7 +16,7 @@ export default function ListaApis({ apis = [] }) {
   };
 
   return (
-    <div className="lista-apis">
+    <div className="lista-apis" style={{backgroundColor:isDarkMode?'#333':'#FFF'}}>
       <div className="colunas-apis">
         {apis.map((api) => (
           <div

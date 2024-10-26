@@ -10,6 +10,11 @@
   --button-text-color: #ffffff;
   --button-hover-background: #663422ac;
   --icon-logo-color: transparent;
+  --box-shadow-color: #EEE;
+  --lista-apis-box-shadow-color: #F744;
+  --modal-background-color: #FFF;
+  --link-modal-color: #07F;
+  --erro-validar-dados-usuario: #A00;
 }
 
 [data-theme="dark"] {
@@ -23,4 +28,9 @@
   --button-text-color: #ffffff;
   --button-hover-background: #666666;
   --icon-logo-color: #ffff;
+  --box-shadow-color: #444;
+  --lista-apis-box-shadow-color: #FFF4;
+  --modal-background-color: #000;
+  --link-modal-color: #F74;
+  --erro-validar-dados-usuario: #FA4;
 }
