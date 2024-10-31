@@ -18,7 +18,7 @@ export default function ListaApis({ apis = [] }) {
   return (
     <div className="lista-apis" style={{backgroundColor:isDarkMode?'#333':'#FFF'}}>
       <div className="colunas-apis">
-        {apis.map((api) => (
+        {Array.isArray(apis) && apis.map((api) => (
           <div
             key={api.id}
             className="apis"
@@ -26,8 +26,8 @@ export default function ListaApis({ apis = [] }) {
             style={{
               background: `no-repeat url(${api.imageUrl})`,
               backgroundColor: `${api.cor}`,
-              backgroundSize: "cover",
               backgroundPosition: "center",
+              backgroundSize: "cover",
             }}
           ></div>
         ))}

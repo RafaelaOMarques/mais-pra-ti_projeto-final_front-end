@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../styles/usuario.css";
 import icoSenhaInvisivel from "../../assets/senhaInvisivel.png"
 import icoSenhaVisivel from "../../assets/senhaVisivel.png"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Cadastro() {
+  const [statusHttpResposta, defStatusHttpResposta] = useState("");
   const [nome, defNome] = useState(""),
     [email, defEmail] = useState(""),
     [senha, defSenha] = useState(""),
     [lembrarSenha, defLembrarSenha] = useState(false),
     [DDD, defDDD] = useState("");
 
-    let [telefone, defTelefone] = useState(""), [cpf, defCPF] = useState("");
+  let [telefone, defTelefone] = useState(""), [cpf, defCPF] = useState("");
 
   const [nomeValido, defNomeValido] = useState(false);
   const [cpfValido, defCpfValido] = useState(false);
@@ -143,46 +144,43 @@ export default function Cadastro() {
     }
   };
 
+  const Cadastrar = async () => {
+    try {
+      const resposta = await fetch(`${API_URL}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "username": nome,
+          "cpf": cpf,
+          "email": email,
+          "phone": `${DDD}${telefone}`,
+          "password": senha
+        })
+      });
+      defStatusHttpResposta(resposta.status);
+      throw new Error("Erro ao cadastrar: status " + statusHttpResposta);
+    } catch (error) {
+      console.error("\nErro ao criar usuário:\n" + error);
+    }
+  }
+
+  useEffect(() => {
+    switch (statusHttpResposta) {
+      case 200: window.location.href = "/"; redefinirCampos(); break;
+      case 400: console.log("\n---: ERRO 400 :---\nDigete valores válidos!"); break;
+      case 403: console.log("\n---: ERRO 403 :---\nDados incorretos!"); break;
+    }
+  }, [statusHttpResposta]);
+
   const Enviar = (e) => {
     e.preventDefault();
-    localStorage.setItem("autenticado", false);
+    localStorage.setItem("autenticado", "");
     if (nomeValido && cpfValido && emailValido && DDDValido && telefoneValido && senhaValida) {
-      // enviar
-      // username, cpf, email, phone (DDD+telefone), password,  
-
-      /*
-      ANTIGO
-      localStorage.setItem("autenticado", true);
-      localStorage.setItem("nome", nome);
-      localStorage.setItem("email", email);
-      localStorage.setItem("senha", senha);
-      localStorage.setItem("lembrarSenha", lembrarSenha);
-      */
-
-
-
-      console.log("Axios");
-      const API_URL = import.meta.env.VITE_BACKEND_URL;
-      axios.post(`'${API_URL}/auth/signup'`,
-        {
-          "username": `"${nome}"`,
-          "cpf": `"${cpf}"`,
-          "password": `"${senha}"`,
-          "phone": `"${DDD}${telefone}"`,
-          "email": `"${email}"`
-        }
-      )
-      .then(r => console.log("Retorno: " + r))
-      .catch(e => console.log("Erro: " + e));
-      console.log("Fim");
-
-
-
-
-      window.location.href = "/";
+      Cadastrar();
     }
-    redefinirCampos();
-  };
+  }
 
   const redefinirCampos = () => {
     defNome("");
@@ -278,7 +276,8 @@ export default function Cadastro() {
                 name="DDD"
                 required
                 placeholder="00"
-                type="number"
+                type="text"
+                maxLength={2}
               />
               <input
                 className={telefoneAvisoErro ? "input_error" : ""}
