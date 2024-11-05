@@ -8,6 +8,7 @@ const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Acesso() {
   const [statusHttpResposta, defStatusHttpResposta] = useState("");
+  const [httpResposta, defHttpResposta] = useState("");
   const { isDarkMode } = useContext(DarkModeContext); // Usa o contexto de tema
 
   const [usuario, defUsuario] = useState("");
@@ -16,7 +17,6 @@ export default function Acesso() {
   const [usuarioValido, defUsuarioValido] = useState(false);
   const [senhaVisivel, defSenhaVisivel] = useState(false);
   const [usuarioAvisoErro, defUsuarioAvisoErro] = useState(false);
-  const [httpResposta, defHttpResposta] = useState("");
 
   const usuarioInputRef = useRef(null);
 
@@ -55,25 +55,21 @@ export default function Acesso() {
         })
       });
 
-      if (!resposta.ok) {
-        throw new Error("\n\t>> Erro ao cadastrar: status " + resposta.status);
-      }
+      const status = resposta.status;
+      defStatusHttpResposta(status);
+
+      if (!resposta.ok) { return; }
 
       const data = await resposta.json();
-      if (resposta && resposta.status === 200 && data) {
-        localStorage.setItem("autenticado", data.token);
-
-        // Validação do token
+      if (status >= 500) { defHttpResposta("Estamos em manutenção!"); }
+      else if (status >= 400) { defHttpResposta("Dados incorretos ou já cadastrados!") }
+      if (status === 200 && data) {
         const isValid = validarJWT(data.token);
-        if (!isValid) {
-          throw new Error("\n\t>> Token inválido");
-        }
-
-        defStatusHttpResposta(resposta.status);
+        if (!isValid) { defHttpResposta("Em manutenção, tente mais tarde!"); localStorage.removeItem("autenticado"); return; }
+        localStorage.setItem("autenticado", data.token);
       }
-
     } catch (error) {
-      console.error("\n\t>> Erro ao criar usuário:\n" + error);
+      defHttpResposta("Erro ao criar usuário");
     }
   };
 
@@ -116,11 +112,17 @@ export default function Acesso() {
 
   // irei futuramente mandar os erros para o usuário (modal), em vez de mandar no console.
   useEffect(() => {
-    if (statusHttpResposta >= 500) { console.error("Erro no servidor"); defHttpResposta("Problemas no servidor, tente mais tarde!"); }
-    else if (statusHttpResposta >= 400) { console.error("Erro de cliente"); }
-    else if (statusHttpResposta >= 300) { console.log("Redirecionamento"); }
+    if (statusHttpResposta >= 500) { defHttpResposta("Em manutenção, tente mais tarde!"); }
+    else if (statusHttpResposta >= 400) { defHttpResposta("Dados incorretos ou não cadastrados!"); }
     else if (statusHttpResposta >= 200) { window.location.href = "/"; }
   }, [statusHttpResposta])
+
+  useEffect(() => {
+    if (httpResposta.length > 1) {
+      const timer = setTimeout(() => { defHttpResposta(""); }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [httpResposta]);
 
   let navegar = useNavigate();
 
@@ -143,7 +145,6 @@ export default function Acesso() {
               ref={usuarioInputRef}
               required
             />
-            <span className="avisosCadastro">{usuarioAvisoErro ? "Digite um email válido" : ""}</span>
           </label>
           <label className="dados_usuario">
             Senha
@@ -178,6 +179,7 @@ export default function Acesso() {
           <a className="link-recuperacao" href="/Recuperacao">
             Esqueceu sua senha?
           </a>
+          {httpResposta ? <p style={{ color: "var(--erro-validar-dados-usuario)", textAlign: "center" }}>{httpResposta}</p> : ""}
         </div>
       </form>
     </div>

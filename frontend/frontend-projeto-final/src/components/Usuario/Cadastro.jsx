@@ -26,7 +26,6 @@ export default function Cadastro() {
     telefone: false,
     senha: false,
   });
-
   const [validacoes, setValidacoes] = useState({
     nome: false,
     cpf: false,
@@ -35,13 +34,11 @@ export default function Cadastro() {
     telefone: false,
     senha: false,
   });
-
   const DDDValidos = [
     '11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41',
     '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '68', '69', '71',
     '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '88', '91', '93', '94', '96', '97', '98', '99'
   ];
-
   const validarCampos = () => {
     const novosErros = { ...erros };
     const novasValidacoes = { ...validacoes };
@@ -121,15 +118,17 @@ export default function Cadastro() {
           "password": senha
         })
       });
-      defStatusHttpRespostaCriar(resposta.status);
+      const status = resposta.status;
+      defStatusHttpRespostaCriar(status);
       if (resposta.ok) {
         await Acessar();
+      } else {
+        defHttpResposta("Dados incorretos ou já cadastrados!")
       }
     } catch (error) {
-      defHttpResposta('Erro ao criar usuário!');
+      defHttpResposta("Estamos em manutenção!");
     }
-  }
-
+  };
   const Acessar = async () => {
     try {
       const resposta = await fetch(`${API_URL}/auth/login`, {
@@ -150,71 +149,44 @@ export default function Cadastro() {
       const data = await resposta.json();
       if (data && data.token) {
         localStorage.setItem("autenticado", data.token);
-
-        // Validação do token
         const isValid = validarJWT(data.token);
-        if (!isValid) {
-          throw new Error("\n\t>> Token inválido");
-        }
+        if (!isValid) { return; } // Invalido
       }
-
     } catch (error) {
-      console.error("\n\t>> Erro ao acessar usuário:\n" + error);
     }
   };
-
   const decodificarJWT = (token) => {
     const partes = token.split('.');
-    if (partes.length !== 3) {
-      throw new Error("Token JWT inválido");
-    }
+    if (partes.length !== 3) { throw new Error("Token JWT inválido"); }
     const payload = partes[1];
     const dados = JSON.parse(atob(payload));
     return dados;
   };
-
   const validarJWT = (token) => {
     try {
       const dados = decodificarJWT(token);
       const agora = Math.floor(Date.now() / 1000);
-      if (dados.exp < agora) {
-        console.error("Token expirado");
-        return false;
-      }
-      return true;
-
-    } catch (error) {
-      console.error("Erro ao validar o token:", error);
-      return false;
-    }
+      if (dados.exp < agora) { return false; } // Expirado
+      return true; // Valido
+    } catch (error) { return false; }
   };
-
-  useEffect(() => { validarCampos(); }, [usuario, cpf, email, DDD, telefone, senha]);
+  useEffect(() => {
+    validarCampos();
+  }, [usuario, cpf, email, DDD, telefone, senha]);
 
   useEffect(() => {
-    if (statusHttpRespostaCriar >= 500) {
-      console.error("\n>> Erro no servidor\t");
-      defHttpResposta("Estamos em manutenção!");
-    }
-    else if (statusHttpRespostaCriar >= 400) {
-      defHttpResposta("Dados incorretos ou já cadastrados!")
-    }
-    else if (statusHttpRespostaCriar >= 300) {
-      console.log("\n>> Redirecionamento\t");
-    }
+    if (statusHttpRespostaCriar >= 500) { defHttpResposta("Estamos em manutenção!"); }
+    else if (statusHttpRespostaCriar >= 400) { defHttpResposta("Dados incorretos ou já cadastrados!") }
     else if (statusHttpRespostaCriar === 200 && statusHttpRespostaLogar === 200) {
-      defHttpResposta('');
-      redefinirCampos();
-      window.location.href = "/";
+      defHttpResposta(''); redefinirCampos(); window.location.href = "/";
     }
   }, [statusHttpRespostaCriar, statusHttpRespostaLogar]);
 
   const enviar = (e) => {
     e.preventDefault();
-    localStorage.setItem("autenticado", "");
-    if (Object.values(validacoes).every(Boolean)) {
-      Cadastrar();
-    }
+    defHttpResposta('');
+    localStorage.setItem("autenticado", '');
+    if (Object.values(validacoes).every(Boolean)) { Cadastrar(); }
   };
 
   const redefinirCampos = () => {
@@ -235,6 +207,13 @@ export default function Cadastro() {
   };
 
   const navegar = useNavigate();
+
+  useEffect(() => {
+    if (httpResposta) {
+      const timer = setTimeout(() => { defHttpResposta(''); }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [httpResposta]);
 
   return (
     <div className="usuario_div_principal">
@@ -341,7 +320,7 @@ export default function Cadastro() {
           >
             Cadastrar
           </button>
-          {httpResposta.length > 1 ? <p style={{ color: "var(--erro-validar-dados-usuario)" }}>{httpResposta}</p> : ""}
+          {httpResposta ? <p style={{ color: "var(--erro-validar-dados-usuario)", textAlign: "center" }}>{httpResposta}</p> : ""}
         </div>
       </form>
     </div>
