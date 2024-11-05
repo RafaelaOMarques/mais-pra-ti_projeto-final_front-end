@@ -46,3 +46,14 @@
 .slick-arrow {
   z-index: 1; /* Assegura que as setas fiquem acima dos outros elementos */
 }
+
+/* Estilo dos dots no modo escuro */
+.dark-mode-slider .slick-dots li button:before {
+  color: var(--button-text-color);
+  opacity: 0.5; /* Opacidade dos pontos inativos */
+}
+
+.dark-mode-slider .slick-dots li.slick-active button:before {
+  color: var(--button-text-color);
+  opacity: 1; /* Opacidade do ponto ativo */
+}
