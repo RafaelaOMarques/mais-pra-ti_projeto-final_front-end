@@ -1,60 +1,95 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DarkModeProvider } from "../context/DarkModeContext/DarkModeContext";
 import Header from "../components/Header/Header";
 import { Outlet } from "react-router-dom";
 import Carousel from "../components/Carousel/Carousel";
+import ListaApis from "../components/Listaapis/Listaapis";
+import { fetchApis } from "../service/api/buscarApis"; // Importa o serviço de APIs
 
 // Mock de dados para as APIs
-const mockApis = [
-  {
-    id: 1,
-    name: "API do Clima",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "Uma API para obter dados meteorológicos em tempo real.",
-  },
-  {
-    id: 2,
-    name: "API de Filmes",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "API que fornece informações sobre filmes e séries.",
-  },
-  {
-    id: 3,
-    name: "API de Notícias",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "Uma API para acessar as últimas notícias do mundo.",
-  },
-  {
-    id: 4,
-    name: "API de Música",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "API que fornece dados sobre músicas e artistas.",
-  },
-  {
-    id: 5,
-    name: "API de Livros",
-    imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-    description: "Uma API para buscar informações sobre livros e autores.",
-  },
-  // {
-  //   id: 6,
-  //   name: "API de Livros",
-  //   imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-  //   description: "Uma API para buscar informações sobre livros e autores.",
-  // },
-  // {
-  //   id: 7,
-  //   name: "API de Livros",
-  //   imageUrl: "https://picsum.photos/500/300", // URL de exemplo
-  //   description: "Uma API para buscar informações sobre livros e autores.",
-  // },
-];
+// const mockApis = [
+//   {
+//     id: 1,
+//     nome: "API do Clima",
+//     imageUrl: "https://picsum.photos/500/300", // URL de exemplo
+//     descricao: "Uma API para obter dados meteorológicos em tempo real.",
+//     link: `https://www.api.com.br`,
+//   },
+//   {
+//     id: 2,
+//     nome: "API de Filmes",
+//     imageUrl: "https://picsum.photos/400/300", // URL de exemplo
+//     descricao: "API que fornece informações sobre filmes e séries.",
+//     link: `https://www.api.com.br`,
+//   },
+//   {
+//     id: 3,
+//     nome: "API de Notícias",
+//     imageUrl: "https://picsum.photos/300/300", // URL de exemplo
+//     descricao: "Uma API para acessar as últimas notícias do mundo.",
+//     link: `https://www.api.com.br`,
+//   },
+//   {
+//     id: 4,
+//     nome: "API de Música",
+//     imageUrl: "https://picsum.photos/500/400", // URL de exemplo
+//     descricao: "API que fornece dados sobre músicas e artistas.",
+//     link: `https://www.api.com.br`,
+//   },
+//   {
+//     id: 5,
+//     nome: "API de Livros",
+//     imageUrl: "https://picsum.photos/300/400", // URL de exemplo
+//     descricao: "Uma API para buscar informações sobre livros e autores.",
+//     link: `https://www.api.com.br`,
+//   },
+//   // {
+//   //   id: 6,
+//   //   nome: "API de Fotos",
+//   //   imageUrl: "https://picsum.photos/500/300", // URL de exemplo
+//   //   descricao: "Uma API para buscar informações sobre livros e autores.",
+//   //   link: `https://www.api.com.br`,
+
+//   // },
+//   // {
+//   //   id: 7,
+//   //   nome: "API de Animes",
+//   //   imageUrl: "https://picsum.photos/500/300", // URL de exemplo
+//   //   descricao: "Uma API para buscar informações sobre livros e autores.",
+//   //   link: `https://www.api.com.br`,
+//   // },
+// ];
 
 const LayoutWithHeader = () => {
+  const [apis, setApis] = useState([]);
+  const [apisPopulares, setApisPopulares] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    const loadApis = async () => {
+      const apisPopulares = await fetchApis(0, 5);
+      const apisTotais = await fetchApis(0, 12);
+      setApis(apisTotais);
+      setApisPopulares(apisPopulares);
+    };
+    loadApis();
+  }, []);
+
+  const handleSearchChange = (value) => {
+    setSearchValue(value);
+  };
+
+  const filteredApis = apis.filter(
+    (api) =>
+      api.nome.toLowerCase().includes(searchValue.toLowerCase()) ||
+      api.descricao.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
   return (
     <DarkModeProvider>
-      <Header />
-      <Carousel apis={mockApis} />
+      <Header onSearchChange={handleSearchChange} />
+      <Carousel apis={apisPopulares} />
+      <ListaApis apis={filteredApis} />
       <Outlet /> {/* Renderiza o conteúdo das rotas filhas */}
     </DarkModeProvider>
   );

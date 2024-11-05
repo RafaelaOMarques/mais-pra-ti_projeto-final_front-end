@@ -1,3 +1,20 @@
 * {
     margin: 0px;
 }
+
+body[data-theme="light"] {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --button-color: #007bff;
+}
+
+body[data-theme="dark"] {
+    --background-color: #1a1a1a;
+    --text-color: #ffffff;
+    --button-color: #bb86fc;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}

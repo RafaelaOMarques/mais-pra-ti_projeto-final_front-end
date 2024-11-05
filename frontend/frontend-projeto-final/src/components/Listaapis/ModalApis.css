@@ -1,0 +1,64 @@
+#modal-apis {
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ display: flex;
+ z-index: 1000;
+ position: fixed;
+ font-size: large;
+ user-select: none;
+ background: #0007;
+ align-items: center;
+ color: var(--text-font);
+ justify-content: center;
+}
+
+#modal-apis-conteudo {
+ width: 90%;
+ padding: 20px;
+ max-width: 600px;
+ position: relative;
+ border-radius: 8px;
+ background: var(--modal-background-color);
+ box-shadow: 0 0 10px 4px var(--box-shadow-color);
+}
+
+#modal-apis-conteudo a{
+ color: var(--link-modal-color);
+}
+
+.textoDestaque {
+ font-weight: bold;
+}
+
+#modal-logo-fechar{
+ top: 0;
+ right: 0;
+ height: 50px;
+ display: flex;
+ position: absolute;
+}
+
+#modal-apis img{
+ top: -10px;
+ right: 50px;
+ height: 70px;
+ width: 100px;
+ transition: .3s;
+ cursor: pointer;
+ position: absolute;
+ object-fit: contain;
+ box-shadow: 0 0 10px 4px var(--box-shadow-color);
+}
+
+#modal-apis img:hover{
+ scale: 1.1;
+}
+
+#fechar{
+ top: 0;
+ cursor: pointer;
+ padding: 0 10px;
+ font-size: 30px;
+}

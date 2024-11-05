@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import Slider from "react-slick";
-import Modal from "../Modal/Modal"; // Certifique-se de que o Modal esteja implementado corretamente
+import Modal from "../Listaapis/ModalApis";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Carousel.css"; // Estilos para o Carousel
@@ -17,26 +17,28 @@ const Carousel = ({ apis = [] }) => {
 
   const settings = {
     infinite: true,
-    centerMode: true, // Permite o slide central estar no meio
-    slidesToShow: 3, // Número de slides completos visíveis
+    //centerMode: true,
+    slidesToShow: 4, // Número de slides completos visíveis
     slidesToScroll: 1,
     speed: 500,
     arrows: true, // Ativa as setas laterais
     dots: true, // Ativa as bolinhas de navegação
-    centerPadding: "40px", // Para mostrar metade dos slides laterais
+    centerPadding: "60px", // Para mostrar metade dos slides laterais
+    initialSlide: Math.floor(apis.length / 2), // Define o slide do meio como inicial
+
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 5,
-          centerPadding: "30px",
+          slidesToShow: 2,
+          //centerPadding: "30px",
         },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 1,
-          centerPadding: "20px",
+          //centerPadding: "20px",
         },
       },
     ],
@@ -57,45 +59,38 @@ const Carousel = ({ apis = [] }) => {
             >
               <img
                 src={api.imageUrl}
-                alt={api.name}
+                alt={api.nome}
                 className="carousel-image"
               />
-              <p>{api.name}</p>
+              <p>{api.nome}</p>
             </div>
           ))}
         </Slider>
       ) : (
-        <p>APIs ainda não disponíveis</p>
+        <p>
+          {apis.length === 0
+            ? "APIs ainda não disponíveis"
+            : "APIs ainda insuficientes"}
+        </p>
       )}
 
       {selectedApi && (
-        <Modal api={selectedApi} onClose={() => setSelectedApi(null)} />
+        <Modal api={selectedApi} Fechar={() => setSelectedApi(null)} />
       )}
     </div>
   );
 };
 
-// Componentes para customizar as setas
+// Componente para a seta personalizada da direita
 const CustomNextArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "block", right: 0, zIndex: 2 }}
-      onClick={onClick}
-    />
-  );
+  const { className, onClick } = props;
+  return <div className={`${className} custom-next-arrow`} onClick={onClick} />;
 };
 
+// Componente para a seta personalizada da esquerda
 const CustomPrevArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "block", left: 0, zIndex: 2 }}
-      onClick={onClick}
-    />
-  );
+  const { className, onClick } = props;
+  return <div className={`${className} custom-prev-arrow`} onClick={onClick} />;
 };
 
 export default Carousel;

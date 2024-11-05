@@ -1,0 +1,33 @@
+.lista-apis {
+ width: 100%;
+ display: flex;
+ padding: 40px;
+ align-items: center;
+ flex-direction: column;
+ margin: 0 auto;
+}
+
+.colunas-apis {
+ gap: 20px;
+ width: 100%;
+ display: flex;
+ flex-wrap: wrap;
+justify-content: center;
+}
+
+.apis {
+ height: 250px;
+ padding: 10px;
+ cursor: pointer;
+ flex: 0 1 300px;
+ max-width: 350px;
+ text-align: center;
+ border-radius: 8px;
+ border: 1px solid #ccc;
+ transition: 0.3s;
+}
+
+.apis:hover {
+ scale: 1.1;
+ box-shadow: 0 0 10px 4px var(--lista-apis-box-shadow-color);
+}
