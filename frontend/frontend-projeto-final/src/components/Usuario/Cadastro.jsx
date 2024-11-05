@@ -1,147 +1,109 @@
 import { useEffect, useState } from "react";
 import "../../styles/usuario.css";
-import icoSenhaInvisivel from "../../assets/senhaInvisivel.png"
-import icoSenhaVisivel from "../../assets/senhaVisivel.png"
-import { useNavigate } from "react-router-dom"
+import icoSenhaInvisivel from "../../assets/senhaInvisivel.png";
+import icoSenhaVisivel from "../../assets/senhaVisivel.png";
+import { useNavigate } from "react-router-dom";
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Cadastro() {
-  const [statusHttpResposta, defStatusHttpResposta] = useState("");
-  const [nome, defNome] = useState(""),
-    [email, defEmail] = useState(""),
-    [senha, defSenha] = useState(""),
-    [lembrarSenha, defLembrarSenha] = useState(false),
-    [DDD, defDDD] = useState("");
-
-  let [telefone, defTelefone] = useState(""), [cpf, defCPF] = useState("");
-
-  const [nomeValido, defNomeValido] = useState(false);
-  const [cpfValido, defCpfValido] = useState(false);
-  const [emailValido, defEmailValido] = useState(false);
-  const [DDDValido, defDDDValido] = useState(false);
-  const [telefoneValido, defTelefoneValido] = useState(false);
-  const [senhaValida, defSenhaValida] = useState(false);
-
-  const [nomeAvisoErro, defNomeAvisoErro] = useState(false);
-  const [cpfAvisoErro, defCpfAvisoErro] = useState(false);
-  const [emailAvisoErro, defEmailAvisoErro] = useState(false);
-  const [DDDAvisoErro, defDDDAvisoErro] = useState(false);
-  const [telefoneAvisoErro, defTelefoneAvisoErro] = useState(false);
-  const [senhaAvisoErro, defSenhaAvisoErro] = useState(false);
+  const [statusHttpRespostaCriar, defStatusHttpRespostaCriar] = useState("");
+  const [statusHttpRespostaLogar, defStatusHttpRespostaLogar] = useState("");
+  const [httpResposta, defHttpResposta] = useState("");
+  const [usuario, defNome] = useState("");
+  const [cpf, defCpf] = useState("");
+  const [email, defEmail] = useState("");
+  const [DDD, defDDD] = useState("");
+  const [telefone, defTelefone] = useState("");
+  const [senha, defSenha] = useState("");
+  const [lembrarSenha, defLembrarSenha] = useState(false);
   const [senhaVisivel, defSenhaVisivel] = useState(false);
 
+  const [erros, setErros] = useState({
+    nome: false,
+    cpf: false,
+    email: false,
+    DDD: false,
+    telefone: false,
+    senha: false,
+  });
+
+  const [validacoes, setValidacoes] = useState({
+    nome: false,
+    cpf: false,
+    email: false,
+    DDD: false,
+    telefone: false,
+    senha: false,
+  });
+
   const DDDValidos = [
-    '68',                    // Acre
-    '82',                    // Alagoas
-    '96',                    // Amapá
-    '97',                    // Amazonas
-    '71', '73', '74', '75', '77', // Bahia
-    '85', '88',              // Ceará
-    '61',                    // Distrito Federal
-    '27', '28',              // Espírito Santo
-    '62', '64',              // Goiás
-    '63',                    // Maranhão
-    '65',                    // Mato Grosso
-    '66',                    // Mato Grosso do Sul
-    '31', '32', '33', '34', '35', '37', '38', // Minas Gerais
-    '41', '42', '43', '44', '45', '46', // Paraná
-    '83',                    // Paraíba
-    '91', '93', '94',       // Pará
-    '81',                    // Pernambuco
-    '98', '99',              // Piauí
-    '21', '22', '24',       // Rio de Janeiro
-    '84',                    // Rio Grande do Norte
-    '51', '53', '54', '55', // Rio Grande do Sul
-    '69',                    // Rondônia
-    '96',                    // Roraima
-    '47', '48', '49',       // Santa Catarina
-    '11', '12', '13', '14', '15', '16', '17', '18', '19', // São Paulo
-    '79',                    // Sergipe
-    '63',                    // Tocantins
+    '11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41',
+    '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '68', '69', '71',
+    '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '88', '91', '93', '94', '96', '97', '98', '99'
   ];
 
-  const Checagem = () => {
-    if (nome.length > 0) {
-      if (/\S+/.test(nome) && nome.length > 4) {
-        defNomeValido(true);
-        defNomeAvisoErro(false);
-      } else {
-        defNomeAvisoErro(true);
-      }
+  const validarCampos = () => {
+    const novosErros = { ...erros };
+    const novasValidacoes = { ...validacoes };
+
+    // Validação do nome
+    if (usuario.length > 4 && /\S+/.test(usuario)) {
+      novasValidacoes.nome = true;
+      novosErros.nome = false;
     } else {
-      defNomeValido(false);
-      defNomeAvisoErro(false);
+      novasValidacoes.nome = false;
+      novosErros.nome = usuario.length > 0;
     }
 
-    if (cpf.length > 0) {
-      if (/^(?:\d{3}\.\d{3}\.\d{3}-\d{2}|\d{11})$/.test(cpf)) {
-        cpf = cpf.replace(/[.\-]/g, '');
-        if (cpf.length === 11) {
-          defCpfValido(true);
-          defCpfAvisoErro(false);
-        } else {
-          defCpfAvisoErro(true);
-        }
-      } else {
-        defCpfAvisoErro(true);
-      }
+    // Validação do CPF
+    const cpfNumeros = cpf.replace(/[.\-]/g, '');
+    if (/^\d{11}$/.test(cpfNumeros)) {
+      novasValidacoes.cpf = true;
+      novosErros.cpf = false;
     } else {
-      defCpfValido(false);
-      defCpfAvisoErro(false);
+      novasValidacoes.cpf = false;
+      novosErros.cpf = cpf.length > 0;
     }
 
-    if (email.length > 0) {
-      if (/\S+@\S+\.\S+/.test(email)) {
-        defEmailValido(true);
-        defEmailAvisoErro(false);
-      } else {
-        defEmailAvisoErro(true);
-      }
+    // Validação do email
+    if (/\S+@\S+\.\S+/.test(email)) {
+      novasValidacoes.email = true;
+      novosErros.email = false;
     } else {
-      defEmailValido(false);
-      defEmailAvisoErro(false);
+      novasValidacoes.email = false;
+      novosErros.email = email.length > 0;
     }
 
-    if (DDD.length > 0) {
-      if (/^\d{2}$/.test(DDD) && DDDValidos.includes(DDD)) {
-        defDDDValido(true);
-        defDDDAvisoErro(false);
-      } else {
-        defDDDAvisoErro(true);
-      }
+    // Validação do DDD
+    if (/^\d{2}$/.test(DDD) && DDDValidos.includes(DDD)) {
+      novasValidacoes.DDD = true;
+      novosErros.DDD = false;
     } else {
-      defDDDValido(false);
-      defDDDAvisoErro(false);
+      novasValidacoes.DDD = false;
+      novosErros.DDD = DDD.length > 0;
     }
 
-    if (telefone.length > 0) {
-      if (/^(?:\d{8}|\d{9}|\d{5}-\d{4}|\d{4}-\d{4})$/.test(telefone)) {
-        telefone = telefone.replace(/\D/g, '');
-        if ((telefone.length === 8 || telefone.length === 9)) {
-          defTelefoneValido(true);
-          defTelefoneAvisoErro(false);
-        } else {
-          defTelefoneAvisoErro(true);
-        }
-      } else {
-        defTelefoneAvisoErro(true);
-      }
+    // Validação do telefone
+    const telefoneNumeros = telefone.replace(/\D/g, '');
+    if (/^\d{8,9}$/.test(telefoneNumeros)) {
+      novasValidacoes.telefone = true;
+      novosErros.telefone = false;
     } else {
-      defTelefoneValido(false);
-      defTelefoneAvisoErro(false);
+      novasValidacoes.telefone = false;
+      novosErros.telefone = telefone.length > 0;
     }
 
-    if (senha.length > 0) {
-      if (senha.length > 7 && senha.length < 15) {
-        defSenhaValida(true);
-        defSenhaAvisoErro(false);
-      } else {
-        defSenhaAvisoErro(true);
-      }
+    // Validação da senha
+    if (senha.length >= 8 && senha.length <= 14) {
+      novasValidacoes.senha = true;
+      novosErros.senha = false;
     } else {
-      defSenhaValida(false);
-      defSenhaAvisoErro(false);
+      novasValidacoes.senha = false;
+      novosErros.senha = senha.length > 0;
     }
+
+    setErros(novosErros);
+    setValidacoes(novasValidacoes);
   };
 
   const Cadastrar = async () => {
@@ -152,189 +114,234 @@ export default function Cadastro() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "username": nome,
+          "username": usuario,
           "cpf": cpf,
           "email": email,
           "phone": `${DDD}${telefone}`,
           "password": senha
         })
       });
-      defStatusHttpResposta(resposta.status);
-      throw new Error("Erro ao cadastrar: status " + statusHttpResposta);
+      defStatusHttpRespostaCriar(resposta.status);
+      if (resposta.ok) {
+        await Acessar();
+      }
     } catch (error) {
-      console.error("\nErro ao criar usuário:\n" + error);
+      defHttpResposta('Erro ao criar usuário!');
     }
   }
+
+  const Acessar = async () => {
+    try {
+      const resposta = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "username": usuario,
+          "password": senha
+        })
+      });
+
+      defStatusHttpRespostaLogar(resposta.status);
+
+      if (!resposta.ok) { return; }
+
+      const data = await resposta.json();
+      if (data && data.token) {
+        localStorage.setItem("autenticado", data.token);
+
+        // Validação do token
+        const isValid = validarJWT(data.token);
+        if (!isValid) {
+          throw new Error("\n\t>> Token inválido");
+        }
+      }
+
+    } catch (error) {
+      console.error("\n\t>> Erro ao acessar usuário:\n" + error);
+    }
+  };
+
+  const decodificarJWT = (token) => {
+    const partes = token.split('.');
+    if (partes.length !== 3) {
+      throw new Error("Token JWT inválido");
+    }
+    const payload = partes[1];
+    const dados = JSON.parse(atob(payload));
+    return dados;
+  };
+
+  const validarJWT = (token) => {
+    try {
+      const dados = decodificarJWT(token);
+      const agora = Math.floor(Date.now() / 1000);
+      if (dados.exp < agora) {
+        console.error("Token expirado");
+        return false;
+      }
+      return true;
+
+    } catch (error) {
+      console.error("Erro ao validar o token:", error);
+      return false;
+    }
+  };
+
+  useEffect(() => { validarCampos(); }, [usuario, cpf, email, DDD, telefone, senha]);
 
   useEffect(() => {
-    switch (statusHttpResposta) {
-      case 200: window.location.href = "/"; redefinirCampos(); break;
-      case 400: console.log("\n---: ERRO 400 :---\nDigete valores válidos!"); break;
-      case 403: console.log("\n---: ERRO 403 :---\nDados incorretos!"); break;
+    if (statusHttpRespostaCriar >= 500) {
+      console.error("\n>> Erro no servidor\t");
+      defHttpResposta("Estamos em manutenção!");
     }
-  }, [statusHttpResposta]);
+    else if (statusHttpRespostaCriar >= 400) {
+      defHttpResposta("Dados incorretos ou já cadastrados!")
+    }
+    else if (statusHttpRespostaCriar >= 300) {
+      console.log("\n>> Redirecionamento\t");
+    }
+    else if (statusHttpRespostaCriar === 200 && statusHttpRespostaLogar === 200) {
+      defHttpResposta('');
+      redefinirCampos();
+      window.location.href = "/";
+    }
+  }, [statusHttpRespostaCriar, statusHttpRespostaLogar]);
 
-  const Enviar = (e) => {
+  const enviar = (e) => {
     e.preventDefault();
     localStorage.setItem("autenticado", "");
-    if (nomeValido && cpfValido && emailValido && DDDValido && telefoneValido && senhaValida) {
+    if (Object.values(validacoes).every(Boolean)) {
       Cadastrar();
     }
-  }
+  };
 
   const redefinirCampos = () => {
     defNome("");
-    defCPF("");
+    defCpf("");
     defEmail("");
     defDDD("");
     defTelefone("");
     defSenha("");
-    defNomeValido(false);
-    defCpfValido(false);
-    defEmailValido(false);
-    defTelefoneValido(false);
-    defDDDValido(false);
-    defSenhaValida(false);
+    setValidacoes({
+      nome: false,
+      cpf: false,
+      email: false,
+      DDD: false,
+      telefone: false,
+      senha: false,
+    });
   };
 
-  let navegar = useNavigate();
+  const navegar = useNavigate();
 
   return (
     <div className="usuario_div_principal">
-      <button id="btVoltar" onClick={() => { navegar(-1); }}></button>
-      <form method="post" onSubmit={Enviar}>
+      <button id="btVoltar" onClick={() => navegar(-1)}></button>
+      <form method="post" onSubmit={enviar}>
         <div>
           <label className="dados_usuario">
             Nome do usuário
             <input
-              className={nomeAvisoErro ? "input_error" : ""}
-              onKeyUp={Checagem}
-              value={nome}
-              onChange={(e) => {
-                defNome(e.target.value);
-                Checagem();
-              }}
+              className={erros.nome ? "input_error" : ""}
+              value={usuario}
+              onChange={(e) => defNome(e.target.value)}
               autoComplete="name"
-              name="name"
-              required
               placeholder="Nome"
-              type="text"
+              required
             />
-            <span className="avisosCadastro">{nomeAvisoErro ? "Nome deve ter mais de 4 caracteres" : ""}</span>
+            <span className="avisosCadastro">{erros.nome ? "Nome deve ter mais de 4 caracteres" : ""}</span>
           </label>
 
           <label className="dados_usuario">
             CPF
             <input
-              className={cpfAvisoErro ? "input_error" : ""}
-              onKeyUp={Checagem}
+              className={erros.cpf ? "input_error" : ""}
               value={cpf}
-              onChange={(e) => {
-                defCPF(e.target.value);
-                Checagem();
-              }}
+              onChange={(e) => defCpf(e.target.value)}
               autoComplete="cpf"
-              name="cpf"
+              placeholder="00000000000"
               required
-              placeholder="000.000.000-00"
-              type="text"
             />
-            <span className="avisosCadastro">{cpfAvisoErro ? "Digite um CPF válido" : ""}</span>
+            <span className="avisosCadastro">{erros.cpf ? "Digite um CPF válido" : ""}</span>
           </label>
-
 
           <label className="dados_usuario">
             Email
             <input
-              className={emailAvisoErro ? "input_error" : ""}
-              onKeyUp={Checagem}
+              className={erros.email ? "input_error" : ""}
               value={email}
-              onChange={(e) => {
-                defEmail(e.target.value);
-                Checagem();
-              }}
+              onChange={(e) => defEmail(e.target.value)}
               autoComplete="email"
-              name="email"
-              required
               placeholder="seu@email.com"
-              type="email"
+              required
             />
-            <span className="avisosCadastro">{emailAvisoErro ? "Digite um email válido" : ""}</span>
+            <span className="avisosCadastro">{erros.email ? "Digite um email válido" : ""}</span>
           </label>
+
           <label className="dados_usuario">
             Telefone
             <div id="tel_usuario">
               <input
-                className={DDDAvisoErro ? "input_error" : ""}
-                onKeyUp={Checagem}
+                className={erros.DDD ? "input_error" : ""}
                 value={DDD}
                 onChange={(e) => {
                   defDDD(e.target.value);
-                  Checagem();
+                  if (e.target.value.length >= 2) { document.getElementById("telefone").focus(); }
                 }}
                 autoComplete="DDD"
-                name="DDD"
-                required
                 placeholder="00"
-                type="text"
-                maxLength={2}
+                required
               />
               <input
-                className={telefoneAvisoErro ? "input_error" : ""}
-                onKeyUp={Checagem}
+                id="telefone"
+                className={erros.telefone ? "input_error" : ""}
                 value={telefone}
-                onChange={(e) => {
-                  defTelefone(e.target.value);
-                  Checagem();
-                }}
+                onChange={(e) => defTelefone(e.target.value)}
                 autoComplete="tel"
-                name="tel"
+                placeholder="000000000"
                 required
-                placeholder="00000-0000"
-                type="tel"
               />
             </div>
-            <span className="avisosCadastro">{telefoneAvisoErro ? "Número de telefone invalido" : ""}</span>
+            <span className="avisosCadastro">{erros.telefone ? "Número de telefone inválido" : ""}</span>
           </label>
+
           <label className="dados_usuario">
             Senha
             <input
-              className={senhaAvisoErro ? "input_error" : ""}
-              onKeyUp={Checagem}
+              className={erros.senha ? "input_error" : ""}
               value={senha}
-              onChange={(e) => {
-                defSenha(e.target.value);
-                Checagem();
-              }}
+              onChange={(e) => defSenha(e.target.value)}
               autoComplete="password"
-              name="password"
-              required
-              placeholder="8 a 14 carácteres"
+              placeholder="8 a 14 caracteres"
               type={senhaVisivel ? "text" : "password"}
             />
-            <i className="ver_senha" onClick={() => { defSenhaVisivel(!senhaVisivel); }} style={{ backgroundImage: `url("${senhaVisivel ? icoSenhaVisivel : icoSenhaInvisivel}")` }}></i>
-            <span className="avisosCadastro">{senhaAvisoErro ? "Senha deve ter 8 a 14 caracteres" : ""}</span>
+            <i
+              className="ver_senha"
+              onClick={() => defSenhaVisivel(!senhaVisivel)}
+              style={{ backgroundImage: `url(${senhaVisivel ? icoSenhaVisivel : icoSenhaInvisivel})` }}
+            ></i>
+            <span className="avisosCadastro">{erros.senha ? "A senha deve ter entre 8 e 14 caracteres" : ""}</span>
           </label>
+
           <label className="label_lembrar_senha">
             <input
               className="input_lembrar_senha"
               type="checkbox"
-              onChange={(e) => {
-                defLembrarSenha(e.target.checked);
-              }}
               checked={lembrarSenha}
-            />{" "}
+              onChange={() => defLembrarSenha(!lembrarSenha)}
+            />
             <span className="span_lembrar_senha"></span>Lembrar-me
           </label>
-          <div className="container-flex-column">
-            <button
-              className="botoes_usuario botoes_claros botoes-full"
-              style={{ width: "100%" }}
-              type="submit"
-            >
-              Criar conta
-            </button>
-          </div>
+
+          <button className="botoes_usuario botoes_claros botoes-full"
+            style={{ width: "100%" }}
+            type="submit"
+          >
+            Cadastrar
+          </button>
+          {httpResposta.length > 1 ? <p style={{ color: "var(--erro-validar-dados-usuario)" }}>{httpResposta}</p> : ""}
         </div>
       </form>
     </div>

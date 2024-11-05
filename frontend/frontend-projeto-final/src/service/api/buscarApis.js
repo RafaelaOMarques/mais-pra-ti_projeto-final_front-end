@@ -19,6 +19,7 @@ export const fetchApis = async (page, size) => {
         descricao: api.description,
         link: api.link,
         imageUrl: api.icon,
+        id: api.id
       }));
     }
 

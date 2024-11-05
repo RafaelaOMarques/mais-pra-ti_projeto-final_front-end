@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"
 import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
 import icoSenhaInvisivel from "../../assets/senhaInvisivel.png"
@@ -16,6 +16,9 @@ export default function Acesso() {
   const [usuarioValido, defUsuarioValido] = useState(false);
   const [senhaVisivel, defSenhaVisivel] = useState(false);
   const [usuarioAvisoErro, defUsuarioAvisoErro] = useState(false);
+  const [httpResposta, defHttpResposta] = useState("");
+
+  const usuarioInputRef = useRef(null);
 
   const Checagem = () => {
     if (usuario.length > 4) {
@@ -51,28 +54,72 @@ export default function Acesso() {
           "password": senha
         })
       });
+
       if (!resposta.ok) {
-        throw new Error("\n\t>> Erro ao cadastrar: status " + statusHttpResposta);
-      }
-      const data = await resposta.json();
-      if (resposta && resposta.status == 200 && data) {
-        localStorage.setItem("autenticado", data.token);
-        defStatusHttpResposta(resposta.status);
+        throw new Error("\n\t>> Erro ao cadastrar: status " + resposta.status);
       }
 
+      const data = await resposta.json();
+      if (resposta && resposta.status === 200 && data) {
+        localStorage.setItem("autenticado", data.token);
+
+        // Validação do token
+        const isValid = validarJWT(data.token);
+        if (!isValid) {
+          throw new Error("\n\t>> Token inválido");
+        }
+
+        defStatusHttpResposta(resposta.status);
+      }
 
     } catch (error) {
       console.error("\n\t>> Erro ao criar usuário:\n" + error);
     }
-  }
+  };
+
+  // Função para decodificar um token JWT
+  const decodificarJWT = (token) => {
+    const partes = token.split('.');
+    if (partes.length !== 3) {
+      throw new Error("Token JWT inválido");
+    }
+
+    const payload = partes[1];
+    const dados = JSON.parse(atob(payload));
+    return dados;
+  };
+
+  // Função para validar um token JWT
+  const validarJWT = (token) => {
+    try {
+      const dados = decodificarJWT(token);
+
+      // Verifica se o token está expirado
+      const agora = Math.floor(Date.now() / 1000);
+      if (dados.exp < agora) {
+        console.error("Token expirado");
+        return false;
+      }
+
+      console.log("Token é válido", dados);
+      return true;
+
+    } catch (error) {
+      console.error("Erro ao validar o token:", error);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    usuarioInputRef.current.focus();
+  }, []);
 
   // irei futuramente mandar os erros para o usuário (modal), em vez de mandar no console.
   useEffect(() => {
-    switch (statusHttpResposta) {
-      case 200: window.location.href = "/"; console.log(temp); break;
-      case 400: console.log("\n\t>> ---: ERRO 400 :---\nDigete valores válidos!"); break;
-      case 403: console.log("\n\t>> ---: ERRO 403 :---\nDados incorretos!"); break;
-    }
+    if (statusHttpResposta >= 500) { console.error("Erro no servidor"); defHttpResposta("Problemas no servidor, tente mais tarde!"); }
+    else if (statusHttpResposta >= 400) { console.error("Erro de cliente"); }
+    else if (statusHttpResposta >= 300) { console.log("Redirecionamento"); }
+    else if (statusHttpResposta >= 200) { window.location.href = "/"; }
   }, [statusHttpResposta])
 
   let navegar = useNavigate();
@@ -93,6 +140,7 @@ export default function Acesso() {
               name="username"
               placeholder="Nome do usuário"
               type="text"
+              ref={usuarioInputRef}
               required
             />
             <span className="avisosCadastro">{usuarioAvisoErro ? "Digite um email válido" : ""}</span>
