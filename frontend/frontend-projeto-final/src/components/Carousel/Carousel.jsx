@@ -47,8 +47,6 @@ const Carousel = ({ apis = [] }) => {
   return (
     <div className="carousel-container">
       <h2 className="carousel-title">Mais populares</h2>
-      {apis.length > 0 ? (
-        <Slider {...settings}>
       {apis.length >= 5 ? ( // Exibe o carousel se houver 5 ou mais APIs
         <Slider {...settings} className={isDarkMode ? "dark-mode-slider" : ""}>
           {apis.map((api) => (
