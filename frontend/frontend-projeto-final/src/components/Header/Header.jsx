@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaSun, FaMoon, FaTimes } from "react-icons/fa";
 import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
 import "./Header.css";
@@ -11,18 +11,42 @@ const Header = ({ onSearchChange }) => {
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [searchValue, setSearchValue] = useState(""); // Estado para o valor da pesquisa
+const [tokenValido, defTokenValido] = useState(false)
 
   const Acessar = () => {
-    if (
-      localStorage.getItem("autenticado") == null ||
-      localStorage.getItem("autenticado") === "false"
-    ) {
+    if (!localStorage.getItem("autenticado") || localStorage.getItem("autenticado").length < 50 ) {
       window.location.href = "/Acesso";
     } else {
       localStorage.removeItem("autenticado");
       window.location.href = "/";
     }
   };
+
+useEffect(() => {
+  const validarJWT = () => {
+    const token = localStorage.getItem("autenticado");
+    defTokenValido(false)
+    
+    if (token) {
+      // Decodificando o token
+      const payload = token.split('.')[1]; // Pega a parte do payload do JWT
+      const dados = JSON.parse(atob(payload)); // Decodifica o payload
+
+      const agora = Math.floor(Date.now() / 1000); // Tempo atual em segundos
+
+      // Verifica se o token expirou
+      if (dados.exp < agora) {
+        console.error("Token expirado");
+        // Aqui você pode redirecionar o usuário ou limpar o token
+      } else {
+        defTokenValido(true)
+      }
+    }
+  };
+
+  validarJWT(); // Chama a função de validação
+}, []); // executado apenas uma vez ao montar o componente
+
 
   const closeSearch = () => {
     setIsSearchExpanded(false);
@@ -74,7 +98,7 @@ const Header = ({ onSearchChange }) => {
         <button onClick={Acessar} className="login-button">
           <img src={LoginIcon} alt="login icon" />
           <span>
-            {localStorage.getItem("autenticado") === "true" ? "Sair" : "Entrar"}
+            { tokenValido ? "Sair" : "Entrar"}
           </span>
         </button>
         <button className="theme-switcher" onClick={toggleDarkMode}>

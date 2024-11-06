@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Slider from "react-slick";
 import Modal from "../Listaapis/ModalApis";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "./Carousel.css"; // Estilos para o Carousel
 import "./Carousel.css";
+import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
 
 const Carousel = ({ apis = [] }) => {
   const [selectedApi, setSelectedApi] = useState(null);
+  const { isDarkMode } = useContext(DarkModeContext);
 
   const handleApiClick = (api) => {
     setSelectedApi(api);
@@ -47,7 +50,7 @@ const Carousel = ({ apis = [] }) => {
     <div className="carousel-container">
       <h2 className="carousel-title">Mais populares</h2>
       {apis.length >= 5 ? ( // Exibe o carousel se houver 5 ou mais APIs
-        <Slider {...settings}>
+        <Slider {...settings} className={isDarkMode ? "dark-mode-slider" : ""}>
           {apis.map((api) => (
             <div
               key={api.id}

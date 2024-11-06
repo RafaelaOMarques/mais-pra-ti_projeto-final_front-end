@@ -1,50 +1,128 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"
 import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
 import icoSenhaInvisivel from "../../assets/senhaInvisivel.png"
 import icoSenhaVisivel from "../../assets/senhaVisivel.png"
 import "../../styles/usuario.css";
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Acesso() {
+  const [statusHttpResposta, defStatusHttpResposta] = useState("");
+  const [httpResposta, defHttpResposta] = useState("");
   const { isDarkMode } = useContext(DarkModeContext); // Usa o contexto de tema
 
-  const [email, defEmail] = useState("");
+  const [usuario, defUsuario] = useState("");
   const [senha, defSenha] = useState("");
   const [lembrarSenha, defLembrarSenha] = useState(false);
-  const [emailValido, defEmailValido] = useState(false);
+  const [usuarioValido, defUsuarioValido] = useState(false);
   const [senhaVisivel, defSenhaVisivel] = useState(false);
-  const [emailAvisoErro, defEmailAvisoErro] = useState(false);
+  const [usuarioAvisoErro, defUsuarioAvisoErro] = useState(false);
+
+  const usuarioInputRef = useRef(null);
 
   const Checagem = () => {
-    if (email.length > 0) {
-      defEmailValido(false);
-      if (/\S+@\S+\.\S+/.test(email)) {
-        defEmailAvisoErro(false);
-        defEmailValido(true);
-      } else {
-        defEmailAvisoErro(true);
-      }
+    if (usuario.length > 4) {
+      defUsuarioValido(true);
+      defUsuarioAvisoErro(false);
     } else {
-      defEmailValido(false);
+      defUsuarioValido(false);
+      defUsuarioAvisoErro(true);
     }
   };
 
   const Enviar = (e) => {
     e.preventDefault();
-    if (
-      email === localStorage.getItem("email") &&
-      senha === localStorage.getItem("senha")
-    ) {
+    if (usuarioValido && senha.length >= 8) {
       localStorage.setItem("lembrarSenha", lembrarSenha);
-      localStorage.setItem("autenticado", true);
-      window.location.href = "/";
+      Acessar();
     } else {
-      localStorage.setItem("autenticado", false);
-      defEmail("");
+      localStorage.setItem("autenticado", "");
+      defUsuario("");
       defSenha("");
-      alert("Email ou senha inválida!");
     }
   };
+
+  const Acessar = async () => {
+    try {
+      const resposta = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "username": usuario,
+          "password": senha
+        })
+      });
+
+      const status = resposta.status;
+      defStatusHttpResposta(status);
+
+      if (!resposta.ok) { return; }
+
+      const data = await resposta.json();
+      if (status >= 500) { defHttpResposta("Estamos em manutenção!"); }
+      else if (status >= 400) { defHttpResposta("Dados incorretos ou já cadastrados!") }
+      if (status === 200 && data) {
+        const isValid = validarJWT(data.token);
+        if (!isValid) { defHttpResposta("Em manutenção, tente mais tarde!"); localStorage.removeItem("autenticado"); return; }
+        localStorage.setItem("autenticado", data.token);
+      }
+    } catch (error) {
+      defHttpResposta("Erro ao criar usuário");
+    }
+  };
+
+  // Função para decodificar um token JWT
+  const decodificarJWT = (token) => {
+    const partes = token.split('.');
+    if (partes.length !== 3) {
+      throw new Error("Token JWT inválido");
+    }
+
+    const payload = partes[1];
+    const dados = JSON.parse(atob(payload));
+    return dados;
+  };
+
+  // Função para validar um token JWT
+  const validarJWT = (token) => {
+    try {
+      const dados = decodificarJWT(token);
+
+      // Verifica se o token está expirado
+      const agora = Math.floor(Date.now() / 1000);
+      if (dados.exp < agora) {
+        console.error("Token expirado");
+        return false;
+      }
+
+      console.log("Token é válido", dados);
+      return true;
+
+    } catch (error) {
+      console.error("Erro ao validar o token:", error);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    usuarioInputRef.current.focus();
+  }, []);
+
+  // irei futuramente mandar os erros para o usuário (modal), em vez de mandar no console.
+  useEffect(() => {
+    if (statusHttpResposta >= 500) { defHttpResposta("Em manutenção, tente mais tarde!"); }
+    else if (statusHttpResposta >= 400) { defHttpResposta("Dados incorretos ou não cadastrados!"); }
+    else if (statusHttpResposta >= 200) { window.location.href = "/"; }
+  }, [statusHttpResposta])
+
+  useEffect(() => {
+    if (httpResposta.length > 1) {
+      const timer = setTimeout(() => { defHttpResposta(""); }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [httpResposta]);
 
   let navegar = useNavigate();
 
@@ -54,20 +132,20 @@ export default function Acesso() {
       <form onSubmit={Enviar}>
         <div className="usuario_form_container">
           <label className="dados_usuario">
-            Email
+            Usuário
             <input
-              className={!emailValido ? "input-error" : ""}
+              className={!usuarioValido ? "input-error" : ""}
               onKeyUp={Checagem}
-              value={email}
-              onChange={(e) => defEmail(e.target.value)}
-              autoComplete="current-email"
-              name="email"
-              placeholder="seu@email.com"
-              type="email"
+              value={usuario}
+              onChange={(e) => defUsuario(e.target.value)}
+              autoComplete="current-username"
+              name="username"
+              placeholder="Nome do usuário"
+              type="text"
+              ref={usuarioInputRef}
               required
             />
-            <span className="avisosCadastro">{emailAvisoErro ? "Digite um email válido" : ""}</span>
-            </label>
+          </label>
           <label className="dados_usuario">
             Senha
             <input
@@ -101,6 +179,7 @@ export default function Acesso() {
           <a className="link-recuperacao" href="/Recuperacao">
             Esqueceu sua senha?
           </a>
+          {httpResposta ? <p style={{ color: "var(--erro-validar-dados-usuario)", textAlign: "center" }}>{httpResposta}</p> : ""}
         </div>
       </form>
     </div>
