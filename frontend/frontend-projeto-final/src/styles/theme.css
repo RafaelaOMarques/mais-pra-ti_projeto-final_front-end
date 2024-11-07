@@ -15,6 +15,10 @@
   --modal-background-color: #FFF;
   --link-modal-color: #07F;
   --erro-validar-dados-usuario: #A00;
+  --texto-nao-destacados: #F74;
+  --setas-navegacao-cor: 0;
+  --cadasto-texto-destaque: #FFF;
+  --linear-gradient-tema: linear-gradient(#F95 0%, #F70 100%);
 }
 
 [data-theme="dark"] {
@@ -32,5 +36,9 @@
   --lista-apis-box-shadow-color: #FFF4;
   --modal-background-color: #000;
   --link-modal-color: #F74;
-  --erro-validar-dados-usuario: #FA4;
+  --erro-validar-dados-usuario: #FA0;
+  --texto-nao-destacados: #F74;
+  --setas-navegacao-cor: 1;
+  --cadasto-texto-destaque: #FA0;
+  --linear-gradient-tema: linear-gradient(#555 0%, #222 100%);
 }

@@ -2,9 +2,10 @@
  width: 100%;
  display: flex;
  padding: 40px;
+ margin: 0 auto;
  align-items: center;
  flex-direction: column;
- margin: 0 auto;
+ background-color: var(--background);
 }
 
 .colunas-apis {
@@ -16,15 +17,15 @@ justify-content: center;
 }
 
 .apis {
+ width: 350px;
  height: 250px;
  padding: 10px;
  cursor: pointer;
- flex: 0 1 300px;
- max-width: 350px;
+ flex: 0 1 350px;
+ transition: 0.3s;
  text-align: center;
  border-radius: 8px;
  border: 1px solid #ccc;
- transition: 0.3s;
 }
 
 .apis:hover {

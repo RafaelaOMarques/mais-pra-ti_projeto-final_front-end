@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DarkModeProvider } from "../context/DarkModeContext/DarkModeContext";
 import Header from "../components/Header/Header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Carousel from "../components/Carousel/Carousel";
 import ListaApis from "../components/Listaapis/Listaapis";
 import { fetchApis } from "../service/api/buscarApis"; // Importa o serviço de APIs
@@ -64,6 +64,7 @@ const LayoutWithHeader = () => {
   const [apis, setApis] = useState([]);
   const [apisPopulares, setApisPopulares] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const location = useLocation();
 
   useEffect(() => {
     const loadApis = async () => {
@@ -88,8 +89,12 @@ const LayoutWithHeader = () => {
   return (
     <DarkModeProvider>
       <Header onSearchChange={handleSearchChange} />
-      <Carousel apis={apisPopulares} />
-      <ListaApis apis={filteredApis} />
+      {location.pathname ==="/" && (
+        <>
+        <Carousel apis={apisPopulares} />
+        <ListaApis apis={filteredApis} />
+        </>
+      )}
       <Outlet /> {/* Renderiza o conteúdo das rotas filhas */}
     </DarkModeProvider>
   );

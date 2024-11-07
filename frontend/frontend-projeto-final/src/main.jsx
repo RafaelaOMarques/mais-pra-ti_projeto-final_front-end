@@ -8,11 +8,18 @@ import Recuperacao from "./components/Usuario/Recuperacao";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LayoutWithHeader from "./layout/LayoutWithHeader";
 import LayoutWithoutHeader from "./layout/LayoutWithoutHeader";
+import MinhaApi from "./components/Minhaapi/MinhaApi";
+import RotaProtegida from "./components/Rotaprotegida/RotaProtegida"
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const rotas = createBrowserRouter([
-  { path: "/", element: <LayoutWithHeader />, },
+  {
+    path: "/", element: <LayoutWithHeader />,
+    children: [
+      { path: "MinhaApi", element: <RotaProtegida element={<MinhaApi />} /> }
+    ]
+  },
   {
     path: "/",
     element: <LayoutWithoutHeader />, // Layout sem Header
@@ -20,7 +27,7 @@ const rotas = createBrowserRouter([
       { path: "/Acesso", element: <Acesso /> },
       { path: "/Cadastro", element: <Cadastro /> },
       { path: "/Recuperacao", element: <Recuperacao /> },
-    ],
+    ]
   },
 ]);
 

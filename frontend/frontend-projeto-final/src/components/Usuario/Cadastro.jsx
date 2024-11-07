@@ -26,6 +26,7 @@ export default function Cadastro() {
     telefone: false,
     senha: false,
   });
+
   const [validacoes, setValidacoes] = useState({
     nome: false,
     cpf: false,
@@ -34,15 +35,16 @@ export default function Cadastro() {
     telefone: false,
     senha: false,
   });
+
   const DDDValidos = [
     '11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41',
     '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '68', '69', '71',
     '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '88', '91', '93', '94', '96', '97', '98', '99'
   ];
+
   const validarCampos = () => {
     const novosErros = { ...erros };
     const novasValidacoes = { ...validacoes };
-
     // Validação do nome
     if (usuario.length > 4 && /\S+/.test(usuario)) {
       novasValidacoes.nome = true;
@@ -51,7 +53,6 @@ export default function Cadastro() {
       novasValidacoes.nome = false;
       novosErros.nome = usuario.length > 0;
     }
-
     // Validação do CPF
     const cpfNumeros = cpf.replace(/[.\-]/g, '');
     if (/^\d{11}$/.test(cpfNumeros)) {
@@ -61,7 +62,6 @@ export default function Cadastro() {
       novasValidacoes.cpf = false;
       novosErros.cpf = cpf.length > 0;
     }
-
     // Validação do email
     if (/\S+@\S+\.\S+/.test(email)) {
       novasValidacoes.email = true;
@@ -70,7 +70,6 @@ export default function Cadastro() {
       novasValidacoes.email = false;
       novosErros.email = email.length > 0;
     }
-
     // Validação do DDD
     if (/^\d{2}$/.test(DDD) && DDDValidos.includes(DDD)) {
       novasValidacoes.DDD = true;
@@ -79,7 +78,6 @@ export default function Cadastro() {
       novasValidacoes.DDD = false;
       novosErros.DDD = DDD.length > 0;
     }
-
     // Validação do telefone
     const telefoneNumeros = telefone.replace(/\D/g, '');
     if (/^\d{8,9}$/.test(telefoneNumeros)) {
@@ -89,7 +87,6 @@ export default function Cadastro() {
       novasValidacoes.telefone = false;
       novosErros.telefone = telefone.length > 0;
     }
-
     // Validação da senha
     if (senha.length >= 8 && senha.length <= 14) {
       novasValidacoes.senha = true;
@@ -98,7 +95,6 @@ export default function Cadastro() {
       novasValidacoes.senha = false;
       novosErros.senha = senha.length > 0;
     }
-
     setErros(novosErros);
     setValidacoes(novasValidacoes);
   };
@@ -129,6 +125,7 @@ export default function Cadastro() {
       defHttpResposta("Estamos em manutenção!");
     }
   };
+
   const Acessar = async () => {
     try {
       const resposta = await fetch(`${API_URL}/auth/login`, {
@@ -155,13 +152,15 @@ export default function Cadastro() {
     } catch (error) {
     }
   };
+
   const decodificarJWT = (token) => {
     const partes = token.split('.');
-    if (partes.length !== 3) { throw new Error("Token JWT inválido"); }
+    if (partes.length !== 3) { localStorage.removeItem("autenticado"); throw new Error("Token JWT inválido"); }
     const payload = partes[1];
     const dados = JSON.parse(atob(payload));
     return dados;
   };
+
   const validarJWT = (token) => {
     try {
       const dados = decodificarJWT(token);
@@ -170,6 +169,7 @@ export default function Cadastro() {
       return true; // Valido
     } catch (error) { return false; }
   };
+
   useEffect(() => {
     validarCampos();
   }, [usuario, cpf, email, DDD, telefone, senha]);
@@ -178,14 +178,15 @@ export default function Cadastro() {
     if (statusHttpRespostaCriar >= 500) { defHttpResposta("Estamos em manutenção!"); }
     else if (statusHttpRespostaCriar >= 400) { defHttpResposta("Dados incorretos ou já cadastrados!") }
     else if (statusHttpRespostaCriar === 200 && statusHttpRespostaLogar === 200) {
-      defHttpResposta(''); redefinirCampos(); window.location.href = "/";
+      defHttpResposta(''); redefinirCampos();
+      window.location.href = sessionStorage.getItem("rotaDestino") || "/";
     }
   }, [statusHttpRespostaCriar, statusHttpRespostaLogar]);
 
   const enviar = (e) => {
     e.preventDefault();
     defHttpResposta('');
-    localStorage.setItem("autenticado", '');
+    localStorage.removeItem("autenticado");
     if (Object.values(validacoes).every(Boolean)) { Cadastrar(); }
   };
 
@@ -206,8 +207,6 @@ export default function Cadastro() {
     });
   };
 
-  const navegar = useNavigate();
-
   useEffect(() => {
     if (httpResposta) {
       const timer = setTimeout(() => { defHttpResposta(''); }, 4000);
@@ -217,7 +216,7 @@ export default function Cadastro() {
 
   return (
     <div className="usuario_div_principal">
-      <button id="btVoltar" onClick={() => navegar(-1)}></button>
+      <button id="btVoltar" onClick={() => window.location.href = "/"} className="setasNavegar"></button>
       <form method="post" onSubmit={enviar}>
         <div>
           <label className="dados_usuario">
@@ -301,8 +300,8 @@ export default function Cadastro() {
               onClick={() => defSenhaVisivel(!senhaVisivel)}
               style={{ backgroundImage: `url(${senhaVisivel ? icoSenhaVisivel : icoSenhaInvisivel})` }}
             ></i>
-            <span className="avisosCadastro">{erros.senha ? "A senha deve ter entre 8 e 14 caracteres" : ""}</span>
           </label>
+          <span className="avisosCadastro">{erros.senha ? "A senha deve ter entre 8 e 14 caracteres" : ""}</span>
 
           <label className="label_lembrar_senha">
             <input

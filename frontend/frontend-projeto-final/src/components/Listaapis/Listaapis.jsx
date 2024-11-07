@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
-import ModalApis from "./ModalApis";
 import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
-import imgTemporaria from "../../assets/viacep.png";
+import ModalApis from "./ModalApis";
 import "./ListaApis.css";
 
 export default function ListaApis({ apis = [] }) {
@@ -16,7 +15,7 @@ export default function ListaApis({ apis = [] }) {
   };
 
   return (
-    <div className="lista-apis" style={{backgroundColor:isDarkMode?'#333':'#FFF'}}>
+    <div className="lista-apis">
       <div className="colunas-apis">
         {Array.isArray(apis) && apis.map((api) => (
           <div

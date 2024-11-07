@@ -1,10 +1,12 @@
 import { useState } from "react";
 import {useNavigate} from "react-router-dom"
+import "../../styles/usuario.css";
 
 export default function Recuperacao() {
   const [email, defEmail] = useState("");
   const [emailValido, defEmailValido] = useState(false);
   const [emailAvisoErro, defEmailAvisoErro] = useState(false);
+  const navegar = useNavigate();
 
   const Checagem = () => {
     if (email.length > 0) {
@@ -25,15 +27,13 @@ export default function Recuperacao() {
     e.preventDefault();
     if (emailValido) {
       alert("Email de recuperação enviado!");
-      window.location.href = "/";
+      navegar("/");
     }
   };
 
-  let navegar = useNavigate();
-
   return (
     <div className="usuario_div_principal">
-      <button id="btVoltar" onClick={()=>{navegar(-1);}}></button>
+      <button id="btVoltar" onClick={()=>navegar(-1)} className="setasNavegar"></button>
       <form onSubmit={Enviar}>
         <div>
           <label className="dados_usuario">

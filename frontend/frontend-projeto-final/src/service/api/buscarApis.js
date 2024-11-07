@@ -15,11 +15,12 @@ export const fetchApis = async (page, size) => {
     // Verifica se o campo "content" existe e retorna apenas os dados necessários
     if (data && data.content) {
       return data.content.map((api) => ({
+        id: api.id,
         nome: api.name,
-        descricao: api.description,
-        link: api.link,
         imageUrl: api.icon,
-        id: api.id
+        descricao: api.description,
+        metodos: api.methods,
+        link: api.link
       }));
     }
 

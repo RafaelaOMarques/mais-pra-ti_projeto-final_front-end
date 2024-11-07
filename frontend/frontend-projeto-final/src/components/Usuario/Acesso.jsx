@@ -1,15 +1,14 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom"
 import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
-import icoSenhaInvisivel from "../../assets/senhaInvisivel.png"
-import icoSenhaVisivel from "../../assets/senhaVisivel.png"
+import icoSenhaInvisivel from "../../assets/senhaInvisivel.png";
+import icoSenhaVisivel from "../../assets/senhaVisivel.png";
 import "../../styles/usuario.css";
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Acesso() {
   const [statusHttpResposta, defStatusHttpResposta] = useState("");
   const [httpResposta, defHttpResposta] = useState("");
-  const { isDarkMode } = useContext(DarkModeContext); // Usa o contexto de tema
+  const { isDarkMode } = useContext(DarkModeContext);
 
   const [usuario, defUsuario] = useState("");
   const [senha, defSenha] = useState("");
@@ -58,22 +57,30 @@ export default function Acesso() {
       const status = resposta.status;
       defStatusHttpResposta(status);
 
-      if (!resposta.ok) { return; }
+      if (!resposta.ok) return;
 
       const data = await resposta.json();
-      if (status >= 500) { defHttpResposta("Estamos em manutenção!"); }
-      else if (status >= 400) { defHttpResposta("Dados incorretos ou já cadastrados!") }
-      if (status === 200 && data) {
+      if (status >= 500) {
+        defHttpResposta("Estamos em manutenção!");
+      } else if (status >= 400) {
+        defHttpResposta("Dados incorretos ou já cadastrados!");
+      } else if (status === 200 && data) {
         const isValid = validarJWT(data.token);
-        if (!isValid) { defHttpResposta("Em manutenção, tente mais tarde!"); localStorage.removeItem("autenticado"); return; }
+        if (!isValid) {
+          defHttpResposta("Em manutenção, tente mais tarde!");
+          localStorage.removeItem("autenticado");
+          return;
+        }
+
         localStorage.setItem("autenticado", data.token);
+        
+        window.location.href = sessionStorage.getItem("rotaDestino") || "/";
       }
     } catch (error) {
       defHttpResposta("Erro ao criar usuário");
     }
   };
 
-  // Função para decodificar um token JWT
   const decodificarJWT = (token) => {
     const partes = token.split('.');
     if (partes.length !== 3) {
@@ -85,21 +92,15 @@ export default function Acesso() {
     return dados;
   };
 
-  // Função para validar um token JWT
   const validarJWT = (token) => {
     try {
       const dados = decodificarJWT(token);
-
-      // Verifica se o token está expirado
       const agora = Math.floor(Date.now() / 1000);
       if (dados.exp < agora) {
         console.error("Token expirado");
         return false;
       }
-
-      console.log("Token é válido", dados);
       return true;
-
     } catch (error) {
       console.error("Erro ao validar o token:", error);
       return false;
@@ -110,25 +111,28 @@ export default function Acesso() {
     usuarioInputRef.current.focus();
   }, []);
 
-  // irei futuramente mandar os erros para o usuário (modal), em vez de mandar no console.
   useEffect(() => {
-    if (statusHttpResposta >= 500) { defHttpResposta("Em manutenção, tente mais tarde!"); }
-    else if (statusHttpResposta >= 400) { defHttpResposta("Dados incorretos ou não cadastrados!"); }
-    else if (statusHttpResposta >= 200) { window.location.href = "/"; }
-  }, [statusHttpResposta])
+    if (statusHttpResposta >= 500) {
+      defHttpResposta("Em manutenção, tente mais tarde!");
+    } else if (statusHttpResposta >= 400) {
+      defHttpResposta("Dados incorretos ou não cadastrados!");
+    } else if (statusHttpResposta >= 200) {
+      window.location.href = "/";
+    }
+  }, [statusHttpResposta]);
 
   useEffect(() => {
     if (httpResposta.length > 1) {
-      const timer = setTimeout(() => { defHttpResposta(""); }, 4000);
+      const timer = setTimeout(() => {
+        defHttpResposta("");
+      }, 4000);
       return () => clearTimeout(timer);
     }
   }, [httpResposta]);
 
-  let navegar = useNavigate();
-
   return (
     <div className={`usuario_div_principal ${isDarkMode ? "dark-mode" : ""}`}>
-      <button id="btVoltar" onClick={() => { navegar("/"); }}></button>
+      <button id="btVoltar" onClick={() => window.location.href="/"} className="setasNavegar"></button>
       <form onSubmit={Enviar}>
         <div className="usuario_form_container">
           <label className="dados_usuario">
@@ -157,7 +161,13 @@ export default function Acesso() {
               type={senhaVisivel ? "text" : "password"}
               required
             />
-            <i className="ver_senha" onClick={() => { defSenhaVisivel(!senhaVisivel); }} style={{ backgroundImage: `url("${senhaVisivel ? icoSenhaVisivel : icoSenhaInvisivel}")` }}></i>
+            <i
+              className="ver_senha"
+              onClick={() => defSenhaVisivel(!senhaVisivel)}
+              style={{
+                backgroundImage: `url("${senhaVisivel ? icoSenhaVisivel : icoSenhaInvisivel}")`
+              }}
+            ></i>
           </label>
           <label className="label_lembrar_senha">
             <input
@@ -179,7 +189,11 @@ export default function Acesso() {
           <a className="link-recuperacao" href="/Recuperacao">
             Esqueceu sua senha?
           </a>
-          {httpResposta ? <p style={{ color: "var(--erro-validar-dados-usuario)", textAlign: "center" }}>{httpResposta}</p> : ""}
+          {httpResposta && (
+            <p style={{ color: "var(--erro-validar-dados-usuario)", textAlign: "center" }}>
+              {httpResposta}
+            </p>
+          )}
         </div>
       </form>
     </div>

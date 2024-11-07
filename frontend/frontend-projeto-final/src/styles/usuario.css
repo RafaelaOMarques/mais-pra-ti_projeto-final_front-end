@@ -11,19 +11,19 @@ body {
   display: flex;
   min-height: 100vh;
   user-select: none;
-  align-self: center !important;
   align-items: center;
-  justify-self: center !important;
   justify-content: center;
+  align-self: center !important;
+  justify-self: center !important;
 }
 
 .usuario_div_principal div:first-child {
   gap: 20px;
-  display: flex;
   width: 300px;
+  display: flex;
   padding: 20px;
-  height: fit-content;
   border-radius: 8px;
+  height: fit-content;
   flex-direction: column;
   border: 1px solid #ccc;
   justify-content: space-between;
@@ -37,9 +37,9 @@ body {
 }
 
 .dados_usuario input {
-  padding: 10px 15px;
   outline: none;
   font-size: large;
+  padding: 10px 15px;
   border-radius: 8px;
   border: 1px solid #ddd;
 }
@@ -54,7 +54,7 @@ body {
   justify-content: start;
 }
 
-#tel_usuario input{
+#tel_usuario input {
   margin: 0;
 }
 
@@ -180,7 +180,7 @@ input[type=number] {
 }
 
 .input_error {
-  border-color: #a00 !important;
+  border-color: var(--erro-validar-dados-usuario) !important;
 }
 
 .container-flex-column {
@@ -193,12 +193,13 @@ input[type=number] {
 }
 
 .link-recuperacao {
-  color: var(--primary-main);
+  font-weight: bold;
+  color: var(--texto-nao-destacados);
 }
 
 .avisosCadastro {
   right: 5%;
-  color: var(--erro-validar-dados-usuario);
+  color: var(--erro-validar-dados-usuario) !important;
   bottom: -20px;
   font-size: small;
   text-align: right;
@@ -218,4 +219,9 @@ input[type=number] {
   background-repeat: no-repeat;
   background-color: transparent;
   background-image: url("../assets/voltar.png");
+}
+
+.setasNavegar{
+  cursor: pointer;
+  filter: invert(var(--setas-navegacao-cor));
 }

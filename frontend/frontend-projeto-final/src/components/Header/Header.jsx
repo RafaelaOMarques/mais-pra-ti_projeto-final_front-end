@@ -11,41 +11,41 @@ const Header = ({ onSearchChange }) => {
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [searchValue, setSearchValue] = useState(""); // Estado para o valor da pesquisa
-const [tokenValido, defTokenValido] = useState(false)
-
+  const [tokenValido, defTokenValido] = useState(false)
+  
   const Acessar = () => {
-    if (!localStorage.getItem("autenticado") || localStorage.getItem("autenticado").length < 50 ) {
-      window.location.href = "/Acesso";
+    if (!localStorage.getItem("autenticado") || localStorage.getItem("autenticado").length < 50) {
+      window.location.href  = "/Acesso";
     } else {
       localStorage.removeItem("autenticado");
       window.location.href = "/";
     }
   };
 
-useEffect(() => {
-  const validarJWT = () => {
-    const token = localStorage.getItem("autenticado");
-    defTokenValido(false)
-    
-    if (token) {
-      // Decodificando o token
-      const payload = token.split('.')[1]; // Pega a parte do payload do JWT
-      const dados = JSON.parse(atob(payload)); // Decodifica o payload
+  useEffect(() => {
+    const validarJWT = () => {
+      const token = localStorage.getItem("autenticado");
+      defTokenValido(false)
 
-      const agora = Math.floor(Date.now() / 1000); // Tempo atual em segundos
+      if (token) {
+        // Decodificando o token
+        const payload = token.split('.')[1]; // Pega a parte do payload do JWT
+        const dados = JSON.parse(atob(payload)); // Decodifica o payload
 
-      // Verifica se o token expirou
-      if (dados.exp < agora) {
-        console.error("Token expirado");
-        // Aqui você pode redirecionar o usuário ou limpar o token
-      } else {
-        defTokenValido(true)
+        const agora = Math.floor(Date.now() / 1000); // Tempo atual em segundos
+
+        // Verifica se o token expirou
+        if (dados.exp < agora) {
+          console.error("Token expirado");
+          // Aqui você pode redirecionar o usuário ou limpar o token
+        } else {
+          defTokenValido(true)
+        }
       }
-    }
-  };
+    };
 
-  validarJWT(); // Chama a função de validação
-}, []); // executado apenas uma vez ao montar o componente
+    validarJWT(); // Chama a função de validação
+  }, []); // executado apenas uma vez ao montar o componente
 
 
   const closeSearch = () => {
@@ -66,12 +66,11 @@ useEffect(() => {
 
   return (
     <nav
-      className={`navbar navbar-expand-lg header-container ${
-        isDarkMode ? "dark-mode" : ""
-      }`}
+      className={`navbar navbar-expand-lg header-container ${isDarkMode ? "dark-mode" : ""
+        }`}
     >
       <div className="navbar-brand">
-        <a className="navbar-brand logo" href="#">
+        <a className="navbar-brand logo" href="/">
           <img src={isDarkMode ? Logo2 : Logo} alt="Logo" />
           <span>API HUB BRASIL</span>
         </a>
@@ -98,7 +97,7 @@ useEffect(() => {
         <button onClick={Acessar} className="login-button">
           <img src={LoginIcon} alt="login icon" />
           <span>
-            { tokenValido ? "Sair" : "Entrar"}
+            {tokenValido ? "Sair" : "Entrar"}
           </span>
         </button>
         <button className="theme-switcher" onClick={toggleDarkMode}>
