@@ -1,0 +1,16 @@
+/* Estilo para o contêiner com rolagem oculta */
+.body-container {
+ flex: 1;
+ overflow-y: scroll;
+ height: 100%;
+}
+
+/* Classe para ocultar a barra de rolagem */
+.no-scrollbar {
+ -ms-overflow-style: none; /* Oculta no Internet Explorer e Edge */
+ scrollbar-width: none; /* Oculta no Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+ display: none; /* Oculta em Chrome, Safari e Opera */
+}

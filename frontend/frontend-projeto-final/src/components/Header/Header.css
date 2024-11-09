@@ -6,7 +6,6 @@
   background-color: var(--primary-main);
   border-bottom: 1px solid var(--border-color);
   color: var(--text-color);
-  position: fixed;
   width: 100%;
   z-index: 3;
 }
@@ -85,11 +84,11 @@
   background-color: var(--primary-dark);
   border: 1px solid var(--primary-dark);
   color: var(--button-text-color);
-  padding: 0px 10px 0px 10px;
+  padding: 0px 10px;
   border-radius: 15px;
   height: 35px;
   cursor: pointer;
-  width: 120px;
+  width: 150px;
 }
 
 .theme-login-container .login-button:hover {
@@ -126,4 +125,34 @@
 
 .close-icon .dark-mode {
   color: white; /* Define a cor do ícone como branco */
+}
+
+.dropdown-menu {
+  display: block;
+  position: absolute;
+  background-color: var(--primary-dark);
+  border: 1px solid var(--primary-dark);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0px 10px;
+  top: 120%;
+  right: 0;
+  min-width: 150px;
+  width: fit-content;
+  z-index: 10;
+}
+
+.dropdown-menu a {
+  padding: 10px;
+  text-decoration: none;
+  color: var(--button-text-color);
+  display: block;
+}
+
+.dropdown-menu a:hover {
+  font-weight: bold;
+}
+
+.login-button-container {
+  position: relative; /* Necessário para posicionar o menu suspenso em relação ao botão */
 }

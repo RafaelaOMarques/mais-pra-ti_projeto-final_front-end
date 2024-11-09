@@ -19,6 +19,7 @@
   --setas-navegacao-cor: 0;
   --cadasto-texto-destaque: #FFF;
   --linear-gradient-tema: linear-gradient(#F95 0%, #F70 100%);
+  --gerenciarApis-bg-conteudo: #EEE;
 }
 
 [data-theme="dark"] {
@@ -41,4 +42,5 @@
   --setas-navegacao-cor: 1;
   --cadasto-texto-destaque: #FA0;
   --linear-gradient-tema: linear-gradient(#555 0%, #222 100%);
+  --gerenciarApis-bg-conteudo: #222;
 }

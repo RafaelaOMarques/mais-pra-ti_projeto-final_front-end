@@ -1,6 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { FaSun, FaMoon, FaTimes } from "react-icons/fa";
 import { DarkModeContext } from "../../context/DarkModeContext/DarkModeContext";
+import { useNavigate, Link } from "react-router-dom";
 import "./Header.css";
 import Logo from "../../assets/globe_1.png";
 import Logo2 from "../../assets/globe_2.png";
@@ -10,43 +11,44 @@ import LoginIcon from "../../assets/login_icon.svg";
 const Header = ({ onSearchChange }) => {
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [searchValue, setSearchValue] = useState(""); // Estado para o valor da pesquisa
-  const [tokenValido, defTokenValido] = useState(false)
-  
+  const [searchValue, setSearchValue] = useState("");
+  const [tokenValido, setTokenValido] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  const menuRef = useRef(null);  // Referência para o menu suspenso
+  const navigate = useNavigate();
+
   const Acessar = () => {
     if (!localStorage.getItem("autenticado") || localStorage.getItem("autenticado").length < 50) {
-      window.location.href  = "/Acesso";
+      navigate("/Acesso");  // Redireciona para a página de acesso sem recarregar
     } else {
       localStorage.removeItem("autenticado");
-      window.location.href = "/";
+      navigate("/");  // Redireciona para a página inicial
     }
   };
 
   useEffect(() => {
     const validarJWT = () => {
       const token = localStorage.getItem("autenticado");
-      defTokenValido(false)
+      setTokenValido(false);
 
       if (token) {
-        // Decodificando o token
-        const payload = token.split('.')[1]; // Pega a parte do payload do JWT
-        const dados = JSON.parse(atob(payload)); // Decodifica o payload
+        const payload = token.split('.')[1];
+        const dados = JSON.parse(atob(payload));
+        const agora = Math.floor(Date.now() / 1000);
 
-        const agora = Math.floor(Date.now() / 1000); // Tempo atual em segundos
-
-        // Verifica se o token expirou
         if (dados.exp < agora) {
           console.error("Token expirado");
-          // Aqui você pode redirecionar o usuário ou limpar o token
         } else {
-          defTokenValido(true)
+          setTokenValido(true);
+          setUserName(dados.sub);  // Assume que o nome do usuário está no campo 'sub' do token
         }
       }
     };
 
-    validarJWT(); // Chama a função de validação
-  }, []); // executado apenas uma vez ao montar o componente
-
+    validarJWT();
+  }, []); 
 
   const closeSearch = () => {
     setIsSearchExpanded(false);
@@ -61,14 +63,28 @@ const Header = ({ onSearchChange }) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchValue(value);
-    onSearchChange(value); // Atualiza o valor da pesquisa no Layout
+    onSearchChange(value);
   };
 
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <nav
-      className={`navbar navbar-expand-lg header-container ${isDarkMode ? "dark-mode" : ""
-        }`}
-    >
+    <nav className={`navbar navbar-expand-lg header-container ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="navbar-brand">
         <a className="navbar-brand logo" href="/">
           <img src={isDarkMode ? Logo2 : Logo} alt="Logo" />
@@ -76,30 +92,33 @@ const Header = ({ onSearchChange }) => {
         </a>
       </div>
       <div className="theme-login-container">
-        <div
-          className={`search-container ${isSearchExpanded ? "expanded" : ""}`}
-        >
+        <div className={`search-container ${isSearchExpanded ? "expanded" : ""}`}>
           <input
             type="text"
             value={searchValue}
-            onChange={handleInputChange} // Lida com a alteração na barra de pesquisa
+            onChange={handleInputChange}
             onFocus={toggleSearch}
           />
-          <img src={SearchIcon} alt="search-icon" />
+          {!isSearchExpanded && <img src={SearchIcon} alt="search-icon" />}
           {isSearchExpanded && (
             <span className="clear-icon" onClick={closeSearch}>
-              <FaTimes
-                className={`close-icon ${isDarkMode ? "" : "dark-mode"}`}
-              />
+              <FaTimes className={`close-icon ${isDarkMode ? "" : "dark-mode"}`} />
             </span>
           )}
         </div>
-        <button onClick={Acessar} className="login-button">
-          <img src={LoginIcon} alt="login icon" />
-          <span>
-            {tokenValido ? "Sair" : "Entrar"}
-          </span>
-        </button>
+        <div className="login-button-container">
+          <button onClick={tokenValido ? toggleMenu : Acessar} className="login-button">
+            <img src={LoginIcon} alt="login icon" />
+            <span>{tokenValido ? userName : "Entrar"}</span>
+          </button>
+          {tokenValido && menuVisible && (
+            <div className="dropdown-menu" ref={menuRef}>
+              <Link to="/Gerenciar/Perfil">Perfil</Link>
+              <Link to="/Gerenciar/MinhasApis">Gerenciar</Link>
+              <a href="/" onClick={Acessar}>Sair</a>
+            </div>
+          )}
+        </div>
         <button className="theme-switcher" onClick={toggleDarkMode}>
           {isDarkMode ? <FaSun /> : <FaMoon />}
         </button>
